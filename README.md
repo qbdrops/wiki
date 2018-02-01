@@ -218,6 +218,7 @@ A block also has a field called gas limit. It defines the maximum amount of gas 
 ##### Table 3: Gas consumption in Ethereum blockchain platform
 𝛂 = Height of the index Merkle tree
 𝛃 = Number of transactions in the lead nodes
+
 |  |  𝛂=1 | 𝛂=3 | 𝛂=5 | 𝛂=7 | 𝛂=9 |
 | -------- | -------- | -------- | -------- | -------- | -------- |
 | 𝛃=3| 315422| 511245| 810761|1216315|1730911|
