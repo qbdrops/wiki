@@ -130,7 +130,8 @@ Indexed merkle tree is a data structure to store hash value of _payments_. It is
 !['Infinitechain protocol'](https://imgur.com/0lGspKc.png)
 
 ## Client produces _rawPayment_ and sends it to Server (1~3)
-1. Client produces _rawPayment_ via infinitechain SDK
+[1. Client produces _rawPayment_ via infinitechain SDK](https://github.com/TideiSunTaipei/infinitechain_client/blob/master/README.md#3-make-raw-payment-with-specific-format)
+
 2. Client saves the _rawPayment_ at client side. The stored _rawPayment_ will be used to verify _payment_ returned from server later.
 3. Client sends the _rawPayment_ to server.
 
