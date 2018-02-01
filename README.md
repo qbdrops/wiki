@@ -113,7 +113,7 @@ payment hash = keccak256(cipherUser + cipherCP)
 ```
 
 ### Stage
-Stage is the state that lives in the Infinitechain smart contract, which contains a roothash of a Indexed Merkle Tree. The roothash is a cryptographic proof that stands for the integrity of a collection of serveral _payments_.
+Stage is the state that lives in the Infinitechain smart contract, which contains a roothash of a indexed merkle tree. The roothash is a cryptographic proof that stands for the integrity of a collection of serveral _payments_.
 
 The Infinitechain node will publish a new stage onto blockchain while the centralized service decides to share its current profits with all its stackholders.
 
@@ -187,9 +187,9 @@ Server could _finalize_ to complete the current stage when all _objections_ are 
 3. The Stakeholder counts the profit from the decrypted payments.
 
 # Analysis
-We have performed a series of experiments to demonstrate the feasibility of the proposed architecture. We install a cloud server as our auditing node. It is a virtual machine of AWS EC2 r4.xlarge with 4 CPUs. The operating system is Ubuntu 16.04. The Node.js 8.6.0 is employed to implement the auditing node. We divide the experiments into three major parts including measuring the time required to generate an index Merkle tree, extract slices from an index Merkle tree, and the requirement gas consuming in the function execution of smart contract in Ethereum blockchain. The time and its standard derivation required to generate an index Merkle tree is shown in Table 1. For an index Merkle tree which contains transactions less than 10,000, we only require about 4.6 seconds to generate it. 
+We have performed a series of experiments to demonstrate the feasibility of the proposed architecture. We install a cloud server as our auditing node. It is a virtual machine of AWS EC2 r4.xlarge with 4 CPUs. The operating system is Ubuntu 16.04. The Node.js 8.6.0 is employed to implement the auditing node. We divide the experiments into three major parts including measuring the time required to generate an index merkle tree, extract slices from an index merkle tree, and the requirement gas consuming in the function execution of smart contract in Ethereum blockchain. The time and its standard derivation required to generate an index merkle tree is shown in Table 1. For an index merkle tree which contains transactions less than 10,000, we only require about 4.6 seconds to generate it. 
 
-##### Table 1: The time required to generate an index Merkle tree
+##### Table 1: The time required to generate an index merkle tree
 | # of transaction | Average time (ms) | Standard Deviation (ms) |
 | --------: | --------: | --------: |
 | 100      | 26.22     | 10.79   |
@@ -198,10 +198,10 @@ We have performed a series of experiments to demonstrate the feasibility of the 
 | 100,000  | 62380.20  | 1015.32 |
 | 1,000,000| 1052168.24| 44106.64|
 
-Table 2 lists the time required to extract slices from index Merkle trees which store different number of transactions with different heights. It always needs less than one minisecond to extract a slice even when an index Merkle tree contains one million transactions.
+Table 2 lists the time required to extract slices from index merkle trees which store different number of transactions with different heights. It always needs less than one minisecond to extract a slice even when an index merkle tree contains one million transactions.
 
-##### Table 2: The time required to extract slices from index Merkle trees
-| # of transaction | Height of the index Merkle tree | Average time (ms) | Standard Deviation (ms) |
+##### Table 2: The time required to extract slices from index merkle trees
+| # of transaction | Height of the index merkle tree | Average time (ms) | Standard Deviation (ms) |
 | --------: | --------: | --------: | --------: |
 | 100      | 7  | 0.47 | 1.32     |
 | 1,000    | 10 | 0.18 | 0.08     |
@@ -213,10 +213,10 @@ In the third part of our experiment. We implement the InfiniteChain in the publi
 
 One fundamental reason for metering is that it provides an incentive for miners to operate the contract code. Since computation with global consensus is expensive, transactions have a gas limit field to specify the maximum amount of gas in which the sender is willing to buy. If the gas used exceeds this limit during execution, processing is stopped. It protects full nodes from attackers who could make them execute infinity loops without a gas limit. If a transaction would take longer than a block to process, then it would not be included in the block.
 
-A block also has a field called gas limit. It defines the maximum amount of gas all transactions in the whole block combined is allowed to consume. Its purpose is to keep block propagation and processing time low, thereby allowing for a sufficiently decentralized network. The protocol allows the miner of a block to adjust the block gas limit by a factor of 1/1024 (0.0976%) in either direction. Currently, the gas limit is around eight millions. In our experiment, the highest gas is 3.7 millions in which the height of the index Merkle tree is 20 for storing one million transactions in it and the transactions in the leaf node is 9. It is obvious that the size of the cryptographic proof and required gas are small enough to be performed as a function in Ethereum smart contract.
+A block also has a field called gas limit. It defines the maximum amount of gas all transactions in the whole block combined is allowed to consume. Its purpose is to keep block propagation and processing time low, thereby allowing for a sufficiently decentralized network. The protocol allows the miner of a block to adjust the block gas limit by a factor of 1/1024 (0.0976%) in either direction. Currently, the gas limit is around eight millions. In our experiment, the highest gas is 3.7 millions in which the height of the index merkle tree is 20 for storing one million transactions in it and the transactions in the leaf node is 9. It is obvious that the size of the cryptographic proof and required gas are small enough to be performed as a function in Ethereum smart contract.
 
 ##### Table 3: Gas consumption in Ethereum blockchain platform
-𝛂 = Height of the index Merkle tree
+𝛂 = Height of the index merkle tree
 𝛃 = Number of transactions in the lead nodes
 
 |  |  𝛂=1 | 𝛂=3 | 𝛂=5 | 𝛂=7 | 𝛂=9 |
