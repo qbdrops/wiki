@@ -76,7 +76,7 @@ rawPayment = {
   // allow user write any comment or data but should include pkClient and pkStakeholder
   data: {
     pkClient: 'clientPublicKey',
-    pkStakeholder: 'stakeholderPublicKey'
+    pkStakeholder: 'stakeholderPublicKey',
     foo: 'bar'
   }
 }
@@ -90,9 +90,9 @@ payment = {
   // server will commit this payment on the stage which is assigned by client
   stageHeight: 3,
   // hash of the stageHeight
-  stageHash: '0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6',
+  stageHash: 'c89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6',
   // hash of the encrypt of raw payment
-  paymentHash: '0x6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+  paymentHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
   // cipher which is encrypted via client's public key
   cipherUser: 'blahblah',
   // cipher which is encrypted via stakeholder's public key
