@@ -94,9 +94,9 @@ payment = {
   // hash of the encrypt of raw payment
   paymentHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
   // cipher which is encrypted via client's public key
-  cipherUser: 'blahblah',
+  cipherClient: 'blahblah',
   // cipher which is encrypted via stakeholder's public key
-  cipherCP: 'blahblah'
+  cipherStakeholder: 'blahblah'
   // signature of the payment hash
   v: 28,
   r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
@@ -109,7 +109,7 @@ A payment is fundamental unit in a sidechain. Payments can be made off-chain rap
 The payment hash is constructed by the formula below:
 
 ```
-payment hash = keccak256(cipherUser + cipherCP)
+payment hash = keccak256(cipherClient + cipherStakeholder)
 ```
 
 ### Stage
