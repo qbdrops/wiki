@@ -1,10 +1,10 @@
 # Outline
-- Motivation
-- Overview
-- Roles
-- Glossary
-- The Infinitechain Protocol
-- Analysis
+- [Motivation](#motivation)
+- [Overview](#overview)
+- [Roles](#roles)
+- [Glossary](#glossary)
+- [The Infinitechain Protocol](#the-infinitechain-protocol)
+- [Analysis](#analysis)
 
 # Motivation
 There are more and more decentralized app on the blockchain. These applications need a stable operation environment. However, there are three main issues on the current public blockchain:
