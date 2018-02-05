@@ -141,8 +141,8 @@ Indexed merkle tree is a data structure to store hash value of _payments_. It is
 
 3. Node puts the _payment_ to the pending pool. These _payments_ will later compose a _indexed merkle tree_ for next _stage_.
 
-## Client verifies _payment_ and saves it (7)
-After getting the _payment_, the [client verifies](https://github.com/TideiSunTaipei/infinitechain_browser#4-verify-payment):
+## Client [verifies _payment_](https://github.com/TideiSunTaipei/infinitechain_browser#4-verify-payment) and saves it (7)
+After getting the _payment_, the client verifies:
 - If the ciphers are decryptable
 - If the received paymentHash corresponds to the hash computed from payment ciphers
 - If the paymentHash is in client's storage
@@ -158,7 +158,7 @@ If the _payment_ is verified, the client saves the _payment_ in order to keep se
 1. Node watches for the _AddNewStage_ event.
 2. Node removes _payments_ which are already on _stage_ from pending pool.
 
-## Client _[audits](https://github.com/TideiSunTaipei/infinitechain_browser#5-audit-payment)_ _payment_ distributedly (14~15)
+## Client [_audits_ _payment_](https://github.com/TideiSunTaipei/infinitechain_browser#5-audit-payment) distributedly (14~15)
 _Auditing_ is the process that Client will compute the root hash from the stored _rawPayment_ locally and compare this result with the root hash from blockchain.
 
 _Auditing_ is the crutial mechanism for Client to check whether Server handles the _payment_ honestly and correctly.
