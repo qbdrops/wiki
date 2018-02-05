@@ -130,26 +130,26 @@ Indexed merkle tree is a data structure to store hash value of _payments_. It is
 !['Infinitechain protocol'](https://imgur.com/0lGspKc.png)
 
 ## Client produces _rawPayment_ and sends it to Server (1~3)
-1. Client produces _rawPayment_ via infinitechain SDK
+1. [Client produces _rawPayment_ via infinitechain SDK](https://github.com/TideiSunTaipei/infinitechain_browser#3-make-raw-payment-with-specific-format)
 2. Client saves the _rawPayment_ at client side. The stored _rawPayment_ will be used to verify _payment_ returned from server later.
 3. Client sends the _rawPayment_ to server.
 
 ## Server generates _payment_ from _rawPayment_ and sends it to Node and Client (4~6)
-1. Server encrypts _rawPayment_ and genetates _payment_ and signs it with server's private key.
+1. [Server encrypts _rawPayment_ and genetates _payment_ and signs it with server's private key.](https://github.com/TideiSunTaipei/infinitechain_nodejs#3-make-a-valid-payment)
 
-2. Server sends _payment_ to both Node and Client.
+2. Server sends _payment_ to both [Node](https://github.com/TideiSunTaipei/infinitechain_nodejs#4-send-payments-to-infinitechain-node) and Client.
 
 3. Node puts the _payment_ to the pending pool. These _payments_ will later compose a _indexed merkle tree_ for next _stage_.
 
 ## Client verifies _payment_ and saves it (7)
-After getting the _payment_, the client verifies:
+After getting the _payment_, the [client verifies](https://github.com/TideiSunTaipei/infinitechain_browser#4-verify-payment):
 - If the ciphers are decryptable
 - If the received paymentHash corresponds to the hash computed from payment ciphers
 - If the paymentHash is in client's storage
 
 If the _payment_ is verified, the client saves the _payment_ in order to keep server's signature for taking further actio such as _objection_
 
-## Server commits a _stage_ of _payment_ (8~11)
+## Server [commits a _stage_ of _payment](https://github.com/TideiSunTaipei/infinitechain_nodejs#5-commit-payments-to-blockchain)_ (8~11)
 1. Server sends a request to Node for fetching the root hash.
 2. Node builds the _indexed merkle tree_ for _payments_ from the pending pool and returns the root hash.
 3. Server receives the root hash and adds a new stage on blockchain.
@@ -158,25 +158,25 @@ If the _payment_ is verified, the client saves the _payment_ in order to keep se
 1. Node watches for the _AddNewStage_ event.
 2. Node removes _payments_ which are already on _stage_ from pending pool.
 
-## Client _audits_ _payment_ distributedly (14~15)
+## Client _[audits](https://github.com/TideiSunTaipei/infinitechain_browser#5-audit-payment)_ _payment_ distributedly (14~15)
 _Auditing_ is the process that Client will compute the root hash from the stored _rawPayment_ locally and compare this result with the root hash from blockchain.
 
 _Auditing_ is the crutial mechanism for Client to check whether Server handles the _payment_ honestly and correctly.
 
 If the _auditing_ succeeds, that means Server handls the _payment_ correctly and honestly. If the _auditing_ fails, then the client could take further action, which is _objection_.
 
-## Client _takes objection_ when the audition fails (16)
+## Client _[takes objection](https://github.com/TideiSunTaipei/infinitechain_browser#6-take-objection)_ when the audition fails (16)
 While Client discovers that server not handle _payments_ correctly, Client could _take objection_ to inform the Server.
 
-## Server _exonerates_ the ingrity of _payment_ when the _objection_ is taken (17~18)
+## Server _[exonerates](https://github.com/TideiSunTaipei/infinitechain_nodejs#6-exonerate-payment)_ the ingrity of _payment_ when the _objection_ is taken (17~18)
 It's possible that client request a false _take objection_ even the Server handles _payment_ correctly.
 
 In that case, the Server could _exonerate_ to reject the false _objection_.
 
-## Server _pays penalty_ for each _objection_ when the exoneration fails (19)
+## Server _[pays penalty](https://github.com/TideiSunTaipei/infinitechain_nodejs#7-pay-penalty-payments)_ for each _objection_ when the exoneration fails (19)
 The Server could _pay penalty_ to the Client if there is a valid _objection_.
 
-## Server _finalizes_ the current _stage_ when all _objections_ are settled (20)
+## Server _[finalizes](https://github.com/TideiSunTaipei/infinitechain_nodejs#8-finalize-stage)_ the current _stage_ when all _objections_ are settled (20)
 A _stage_ is settled if and only if all the _objections_ are handled, wether the panelties are paid or _objections_ are proved to be invalid.
 
 Server could _finalize_ to complete the current stage when all _objections_ are settled.
