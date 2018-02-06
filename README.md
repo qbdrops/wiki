@@ -147,7 +147,7 @@ After getting the _payment_, the client verifies:
 - If the received paymentHash corresponds to the hash computed from payment ciphers
 - If the paymentHash is in client's storage
 
-If the _payment_ is verified, the client saves the _payment_ in order to keep server's signature for taking further actio such as _objection_
+If the _payment_ is verified, the client saves the _payment_ in order to keep server's signature for taking further action such as _objection_
 
 ## Server [commits a _stage_ of _payment](https://github.com/TideiSunTaipei/infinitechain_nodejs#5-commit-payments-to-blockchain)_ (8~11)
 1. Server sends a request to Node for fetching the root hash.
