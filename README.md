@@ -169,7 +169,7 @@ If the _auditing_ succeeds, that means Server handls the _payment_ correctly and
 [While Client discovers that server not handle _payments_ correctly, Client could _take objection_ to inform the Server.](https://github.com/TideiSunTaipei/infinitechain_nodejs/blob/master/README.md#9-take-objection)
 
 ## Server _exonerates_ the ingrity of _payment_ when the _objection_ is taken (17~18)
-[It's possible that client request a false _take objection_ even the Server handles _payment_ correctly.](https://github.com/TideiSunTaipei/infinitechain_nodejs/blob/master/README.md#10-exonerate-payment)
+[It's possible that client request a false _objection_ even the Server handles _payment_ correctly.](https://github.com/TideiSunTaipei/infinitechain_nodejs/blob/master/README.md#10-exonerate-payment)
 
 In that case, the Server could _exonerate_ to reject the false _objection_.
 
