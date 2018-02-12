@@ -159,7 +159,7 @@ If the _payment_ is verified, the client saves the _payment_ in order to keep se
 2. Node removes _payments_ which are already on _stage_ from pending pool.
 
 ## Client _audits_ _payment_ distributedly (14~15)
-[_Auditing_ is the process that Client will compute the root hash from the stored _rawPayment_ locally and compare this result with the root hash from blockchain.](https://github.com/TideiSunTaipei/infinitechain_nodejs/blob/master/README.md#8-audit-payment)
+[_Auditing_ is the process that Client will compute the root hash from the stored _Payment_ locally and compare this result with the root hash from blockchain.](https://github.com/TideiSunTaipei/infinitechain_nodejs/blob/master/README.md#8-audit-payment)
 
 _Auditing_ is the crutial mechanism for Client to check whether Server handles the _payment_ honestly and correctly.
 
