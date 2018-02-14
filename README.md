@@ -34,7 +34,7 @@ With Infinitechain protocol, user can easily interact with centralized services 
 3. Private transactions, only the transaction participants can see the relative informations.
 4. Private keys are always under your control.
 5. Centralized services can't tamper any payments and is supervised by the crowd.
-6. Stackholders can instantly withdraw their profits on bockchain after a new stage is published.
+6. Stakeholders can instantly withdraw their profits on blockchain after a new stage is published.
 
 # Roles
 In Infinitechain protocol, there are four kinds of roles: **Client**, **Server**, **Node** and **Stakeholder**.
@@ -46,13 +46,13 @@ In Infinitechain protocol, there are four kinds of roles: **Client**, **Server**
 - Server
   - Could be a live video streaming platform, E-commerce website or other centralized services.
   - Collect _rawPayment_ from the Client.
-  - Genetate _payment_ from _rawPayment_.
+  - Generate _payment_ from _rawPayment_.
   - Send _payment_ to Node.
   - Request a new _stage.
 - Node
   - Construct _indexed merkle tree_.
   - Package informations of a new _stage_.
-- Stackholder
+- Stakeholder
   - One of the Clients.
   - Cooperate and have right to share profits with the Server.
   - Ask for the _indexed merkle tree_ and try to decrypt the leaf data.
@@ -115,7 +115,7 @@ payment hash = keccak256(cipherClient + cipherStakeholder)
 ### Stage
 Stage is the state that lives in the Infinitechain smart contract, which contains a roothash of a indexed merkle tree. The roothash is a cryptographic proof that stands for the integrity of a collection of serveral _payments_.
 
-The Infinitechain node will publish a new stage onto blockchain while the centralized service decides to share its current profits with all its stackholders.
+The Infinitechain node will publish a new stage onto blockchain while the centralized service decides to share its current profits with all its stakeholders.
 
 ### Stage hash
 A stage height can be hashed into a stage hash which could be used to look up the stage contract address.
@@ -168,7 +168,7 @@ If the _auditing_ succeeds, that means Server handls the _payment_ correctly and
 ## Client _takes objection_ when the audition fails (16)
 [While Client discovers that server not handle _payments_ correctly, Client could _take objection_ to inform the Server.](https://github.com/TideiSunTaipei/infinitechain_nodejs/blob/master/README.md#9-take-objection)
 
-## Server _exonerates_ the ingrity of _payment_ when the _objection_ is taken (17~18)
+## Server _exonerates_ the integrity of _payment_ when the _objection_ is taken (17~18)
 [It's possible that client request a false _objection_ even the Server handles _payment_ correctly.](https://github.com/TideiSunTaipei/infinitechain_nodejs/blob/master/README.md#10-exonerate-payment)
 
 In that case, the Server could _exonerate_ to reject the false _objection_.
