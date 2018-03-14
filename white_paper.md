@@ -87,12 +87,36 @@
 ### 帳戶 Account
 一個用戶的帳戶應該包含以下的資訊
 * 地址 Address
+地址由用戶所持有的私鑰產生
+
 * 帳戶餘額 Balance
+代表此帳戶所擁有的貨幣餘額
+
 * 本地序列號 LSN
-* 利他點數 
+對於每次交易都要提交新的LSN來避免雙花
+
+* 利他點數 Litar
+信任點數
+
 ### 交易 Transaction
+一筆交易應該包含以下資訊
+* 送方地址 From
+* 收方地址 To
+* 貨幣數量 Value
+* 資料欄位 DataField
+    * 交易型態 Type
+    * 側鏈側帳根雜湊值 RootHash
+
 ### 區塊 Block
+一個區塊應該包含以下資訊
+* 區塊高度 Block Height
+* 交易 Transactions (array)
+* 區塊雜湊值 Block Hash
+* 父區塊雜湊值 Parent Block Hash
+* 礦工 Miner
+
 ### 節點 Node
+節點會協助
 ### 共識 Consensus
 ### 經濟激勵 Incentive
 ### 治理 Governance
@@ -112,39 +136,41 @@
 主要用於儲存中心化服務產生的索引莫克樹，並產生對應的訪問地址(Address)，以利稽核員對相應區段(Stage)的索引莫克樹進行稽核。
 ### 資料模型 Data Model
 #### 區段 Stage
-區段是指側鏈在特定期間內智能合約上的狀態，其內容包含索引莫克樹的根雜湊值roothash，根雜湊值代表一個密碼學證據，是依照儲存在索引莫克樹中一批側帳所產生出的雜湊值，可用來對索引莫克樹中任何一筆側帳做稽核。
+區段是指側鏈於特定期間內智能合約上的狀態，其內容包含索引莫克樹的根雜湊值roothash，根雜湊值代表一個密碼學證據，是依照儲存在索引莫克樹中一批側帳所產生出的雜湊值，可用來對索引莫克樹中任何一筆側帳做稽核。
 #### 側帳 Light Transaction
-側帳為側鏈不包含買賣雙方交易餘額之交易內容，其資料格式可分為三種:
-其中：
+側帳是側鏈不包含買賣雙方交易餘額之交易內容，其中：
 
     1. lightTxHash : lightTxData 運算產生之雜湊值
     2. type : 側鏈交易型態，可分為deposit, withdraw, remittance
-    3. from : 側帳交易送方之地址
-    4. to : 側帳交易收方之地址
+    3. from : 交易送方之地址
+    4. to : 交易收方之地址
     5. value : 交易金額
     6. fee : 手續費
-    7. LSN : 客戶端產生交易之順序
+    7. LSN : 全名為 Local Sequence Number，是客戶端每筆交易之順序編號
     8. stageHeight : 側鏈區段高度
-    9. clientLtxHash : 客戶端對 lightTxHash 產生的簽章
-- Deposit light transaction
+    9. clientLtxHash : 客戶端對 lightTxHash 簽名之結果
+    10. serverLtxHash : 中心化服務對 lightTxHash 簽名之結果
+
+完整資料格式可分為以下三種:
+- Deposit 
 ```
 lightTx = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca'
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
     lightTxData: {
-        type: deposit
-        from: 'null'    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a'
-        value: 100
-        fee: 5
-        LSN: 2
+        type: 'deposit',
+        from: 'null',    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 100,
+        fee: 5,
+        LSN: 2,
         stageHeight: 1
-    }
+    },
     sig:{
         clientLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
@@ -154,25 +180,25 @@ lightTx = {
 
 }
 ```
-- Remittance transaction
+- Remittance
 ```
 lightTx = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca'
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
     lightTxData: {
-        type: remittance
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb'    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a'
-        value: 100
-        fee: 5
-        LSN: 2
+        type: 'remittance',
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 100,
+        fee: 5,
+        LSN: 2,
         stageHeight: 1
-    }
+    },
     sig:{
         clientLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
@@ -181,25 +207,25 @@ lightTx = {
     }
 }
 ```
-- Withdraw transaction
+- Withdraw
 ```
 lightTx = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a'
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
     lightTxData: {
-        type: withdraw
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb'    
-        to: 'null'
-        value: 100
-        fee: 5
-        LSN: 2
+        type: 'withdraw',
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
+        to: 'null',
+        value: 100,
+        fee: 5,
+        LSN: 2,
         stageHeight: 1
-    }
+    },
     sig:{
         clientLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
@@ -209,39 +235,47 @@ lightTx = {
 }
 ```
 #### 收據 Receipt
-收據為側鏈包含買賣雙方交易餘額之交易內容，其資料格式可分為三種:
-- deposit receipt
+收據為側鏈包含買賣雙方交易餘額之交易內容，其中:
+
+    1. receiptHash : receiptData 運算產生之雜湊值
+    2. GSN : 全名為 Global Sequence Number，是側鏈中所有客戶端交易之順序編號
+    3. fromBalance : 交易送方之餘額
+    4. toBalance : 交易收方之餘額
+    5. serverReceiptHash : 中心化服務對 receiptHash 簽名之結果
+
+完整資料格式可分為以下三種:
+- Deposit
 ```
 receipt = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a'
-    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638'
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
     lightTxData: {
-        type: deposit
-        from: 'null'    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a'
-        value: 100
-        fee: 5
-        LSN: 2
+        type: 'deposit',
+        from: 'null',    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 100,
+        fee: 5,
+        LSN: 2,
         stageHeight: 1
-    }
+    },
     receiptData: {
-        GSN: 20
-        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a'
-        fromBalance: 0
+        GSN: 20,
+        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+        fromBalance: 0,
         toBalance: 500
-    }
+    },
     
     sig:{
         clientLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverReceiptHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
@@ -250,38 +284,38 @@ receipt = {
     }
 }
 ```
-- remittance receipt
+- Remittance
 ```
 receipt = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a'
-    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638'
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
     lightTxData: {
-        type: remittance
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb'    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a'
-        value: 100
-        fee: 5
-        LSN: 2
+        type: 'remittance',
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 100,
+        fee: 5,
+        LSN: 2,
         stageHeight: 1
-    }
+    },
     receiptData: {
-        GSN: 21
-        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a'
-        fromBalance: 50
+        GSN: 21,
+        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+        fromBalance: 50,
         toBalance: 500
-    }
+    },
     
     sig:{
         clientLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverReceiptHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
@@ -290,38 +324,38 @@ receipt = {
     }
 }
 ```
-- withdraw receipt
+- Withdraw
 ```
 receipt = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a'
-    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638'
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
     lightTxData: {
-        type: withdraw
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb'    
-        to: 'null'
-        value: 100
-        fee: 5
-        LSN: 2
+        type: 'withdraw',
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
+        to: 'null',
+        value: 100,
+        fee: 5,
+        LSN: 2,
         stageHeight: 1
-    }
+    },
     receiptData: {
-        GSN: 22
-        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a'
-        fromBalance: 100
+        GSN: 22,
+        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+        fromBalance: 100,
         toBalance: 0
-    }
+    },
     
     sig:{
         clientLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverLtxHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
+        },
         serverReceiptHash:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
@@ -332,7 +366,7 @@ receipt = {
 ```
 #### 索引莫克樹 Indexed Merkle Tree
 ![](https://i.imgur.com/54x0izT.png)
-索引莫克樹是用來儲存資料雜湊值之資料結構，特性是可以快速索引某筆特定資料在索引莫克樹中的位置，以便對該筆資料做稽核。
+索引莫克樹是用來儲存資料雜湊值之資料結構，其特性是可以快速索引某筆特定資料雜湊值在索引莫克樹中的位置，可以即時取出該筆資料雜湊值所在之切片做稽核。
 #### 收據樹 Receipt Tree
 收據樹為索引莫克樹之資料結構，中心化服務會一直接收客戶端送來的側帳產生對應之收據，將每筆收據儲存起來，並在側鏈觸發 CommitStage 新增區段時時產生收據樹，將其roothash放到智能合約上，以利後續稽核員與客戶端可以和 IPFS 取得相關之密碼學證據對收據進行驗證。
 #### 餘額樹 Balance Tree
@@ -355,9 +389,9 @@ receipt = {
 ### 側鏈的經濟威脅與經濟激勵
 #### 經濟威脅：如安全性分析的幾種抗議
 #### 經濟激勵：若如實維護側鏈，則可得到利他點數，有利於更高機會取得區塊獎勵
-### 安全性分析(側鏈節點的底限為接收Light Transaction時會如實驗證簽章，否則側鏈節點是毀損的，以下討論皆在此前提下進行)(詳見投影片之安全分析，先簡述側鏈之安全性分析，接下來講每一種攻擊的解法)
+### 安全性分析
 
-由於金流側鏈本身的協定，實質上是中心化的，可由以下幾點得知
+金流側鏈，實質上是一個針對中心化環境設計的協定，可由以下幾點得知
 
 1. 任何用戶在側鏈產生的轉帳，都要經過中心化服務的驗證，才會進一步更改側鏈節點中的收據樹與餘額樹，在此過程，中心化服務都有機會竄改這些轉帳資料
 1. 雖然任何側鏈用戶皆可產生交易，但此時此刻決定是否出帳的記帳權，始終在中心化服務身上
@@ -367,6 +401,88 @@ receipt = {
 因此在整個側鏈的運作中，中心化服務有以上幾個時間點有機會操弄側鏈用戶的交易資料，進一步圖利自身或與中心化服務共謀的用戶，因此，此節將針對以上幾個時間點和中心化服務可能竄改的資料內容，所產生的攻擊和影響，來分析金流側鏈的安全性。
 
 #### Light Transaction Data
+
+```
+lightTx = {
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca'
+    lightTxData: {
+        type: remittance
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb'    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a'
+        value: 100
+        fee: 5
+        LSN: 2
+        stageHeight: 1
+    }
+    sig:{
+        clientLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+    }
+}
+```
+
+在用戶送出一筆交易後，一個誠實的中心化服務會檢驗該筆交易內容是否滿足其購買條件或商業邏輯後，對此交易之`lightTxHash`簽章，產生以下的結果
+
+```
+lightTx = {
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca'
+    lightTxData: {
+        type: remittance
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb'    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a'
+        value: 100
+        fee: 5
+        LSN: 2
+        stageHeight: 1
+    }
+    sig:{
+        clientLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+        serverLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+    }
+}
+```
+
+但今天中心化服務若是懷抱著惡意，試圖竄改交易資料圖利特定用戶，可能會產生以下的錯誤交易
+
+```
+lightTx = {
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca'
+    lightTxData: {
+        type: 'remittance',
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb', 
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 500,
+        fee: 10,
+        LSN: 2,
+        stageHeight: 1
+    }
+    sig:{
+        clientLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+        serverLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+    }
+}
+```
+
+如以上的結果，`lightTxData`的內容中，`value`從100被改成500，`fee`從5被竄改成10之後，再將此錯誤的交易資訊傳送給側鏈節點，使側鏈節點更新錯誤的側帳，再此情況中，交易的送方`0x49aabbbe9141fe7a80804bdf01473e250a3414cb`餘額將被多扣除400，而交易的收方`0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a`餘額將多增加400，
 
 
 ##### Attack
