@@ -5,10 +5,10 @@
     - 共識上
     - 經濟上
 - 簡介 Introduction
-    - 主鏈做信任機器, 側鏈做商業邏輯 (分散式稽核簡述)
+    - 主鏈做信任機器, 側鏈做商業邏輯 
     - 利他點數
     - 經濟模型
-- 主鏈 Mainchain(Brian+老師負責)
+- 主鏈 Mainchain
     - 帳戶 Account
     - 交易 Transaction
     - 區塊 Block
@@ -17,12 +17,12 @@
     - 經濟激勵 Incentive
     - 治理 Governance
 - 側鏈 Sidechain
-    - 角色 Roles(邱駿, Jerry)
+    - 角色 Roles
         - 中心化服務 Central service
         - 客戶端 Client
         - 稽核員 Auditer
         - 去中心化儲存媒體
-    - 資料模型 Data Model(邱駿, Jerry)
+    - 資料模型 Data Model
         - 區段 Stage
         - 側帳 Light Transaction
         - 收據 Receipt
@@ -44,7 +44,7 @@
                 - 罰款 Pay Penalty
                 - 確認 Finalize
         - 合約實作
-    - 側鏈的經濟威脅與經濟激勵(邱駿, Jerry)
+    - 側鏈的經濟威脅與經濟激勵
         - 經濟威脅：如安全性分析的幾種抗議
         - 經濟激勵：若如實維護側鏈，則可得到利他點數，有利於更高機會取得區塊獎勵
     - 安全性分析(側鏈節點的底限為接收Light Transaction時會如實驗證簽章，否則側鏈節點是毀損的，以下討論皆在此前提下進行)(詳見投影片之安全分析，先簡述側鏈之安全性分析，接下來講每一種攻擊的解法)(Ben)
@@ -76,7 +76,7 @@
 ### 共識上的進步
 ### 經濟上
 ## 簡介 Introduction
-### 主鏈信任機器, 側鏈做商業邏輯 (分散式稽核簡述)
+### 主鏈信任機器, 側鏈做商業邏輯 
 ### 利他點數
 ### 經濟模型
 ## 主鏈 Mainchain
