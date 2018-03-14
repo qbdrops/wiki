@@ -29,7 +29,7 @@
         - 索引莫克樹 Indexed Merkle Tree
         - 收據樹 Receipt Tree
         - 餘額樹 Balance Tree
-    - 側鏈協定 Protocol(邱駿, Jerry)
+    - 側鏈協定 Protocol
         - 金流側鏈協定（放時序圖）
             - 存款 Deposit
             - 提款 Withdraw
@@ -47,7 +47,7 @@
     - 側鏈的經濟威脅與經濟激勵
         - 經濟威脅：如安全性分析的幾種抗議
         - 經濟激勵：若如實維護側鏈，則可得到利他點數，有利於更高機會取得區塊獎勵
-    - 安全性分析(側鏈節點的底限為接收Light Transaction時會如實驗證簽章，否則側鏈節點是毀損的，以下討論皆在此前提下進行)(詳見投影片之安全分析，先簡述側鏈之安全性分析，接下來講每一種攻擊的解法)(Ben)
+    - 安全性分析(側鏈節點的底限為接收Light Transaction時會如實驗證簽章，否則側鏈節點是毀損的，以下討論皆在此前提下進行)(詳見投影片之安全分析，先簡述側鏈之安全性分析，接下來講每一種攻擊的解法)
         - Light Transaction Data
             - Attack
             - Solution
