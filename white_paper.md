@@ -720,7 +720,7 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 當Withdraw側帳產生時，側鏈參與方、中心化服務與主鏈會有多個互動步驟產生，下圖為每個步驟的細節:
 ![](https://i.imgur.com/J3VfmS8.png)
 
-若Bob試圖要從側鏈轉移資產回自己的主鏈幣地址，他將執行以下的動作，Bob在鏈下隨機產生LSN，並向智能合約提出提幣申請，等到礦工打包此交易後，智能合約會在合約狀態中登記一筆提幣紀錄，具體內容為(type=withdraw, address=Bob地址, value=提幣數量, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, (LSN || stageHeight || address)=提幣編號(WSN), withdrawTimeout=提幣逾時時間, withdrawed=是否成功提幣)，其中，提幣逾時時間將會大於單一挑戰期的時間週期，而withdrawed表示中央式服務是否有誠實移轉側鏈資產回主鏈Bob地址中，接著智能合約將廣播**提幣申請事件**，並在側鏈更新側帳，回傳收據等工作，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，最後待挑戰期過後，若沒有人針對此筆提幣有異議，中央式服務即可執行**finalize**方法，使包含此提幣申請的階段帳本達成最終性，同時更改withdrawed為true，接著智能合約會廣播**提幣成功事件**，此後Bob可立即執行 智能合約中**withdraw** 方法從智能合約轉出資產回自己主鏈地址。
+若Bob試圖要從側鏈轉移資產回自己的主鏈幣地址，他將執行以下的動作，Bob在鏈下產生LSN，並向智能合約提出提幣申請，等到礦工打包此交易後，智能合約會在合約狀態中登記一筆提幣紀錄，具體內容為(type=withdraw, address=Bob地址, value=提幣數量, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, (LSN || stageHeight || address)=提幣編號(WSN), withdrawTimeout=提幣逾時時間, withdrawed=是否成功提幣)，其中，提幣逾時時間將會大於單一挑戰期的時間週期，而withdrawed表示中央式服務是否有誠實移轉側鏈資產回主鏈Bob地址中，接著智能合約將廣播**提幣申請事件**，並在側鏈更新側帳，回傳收據等工作，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，最後待挑戰期過後，若沒有人針對此筆提幣有異議，中央式服務即可執行**finalize**方法，使包含此提幣申請的階段帳本達成最終性，同時更改withdrawed為true，接著智能合約會廣播**提幣成功事件**，此後Bob可立即執行 智能合約中**withdraw** 方法從智能合約轉出資產回自己主鏈地址。
 
 ##### 提幣無回應攻擊
 
@@ -738,6 +738,18 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 
 當Remittance側帳產生時，側鏈參與方與中心化服務會有多個互動步驟產生，下圖為每個步驟的細節:
 ![](https://i.imgur.com/7CVzuC4.png)
+
+若Bob試圖要從側鏈轉移資產到Alice的側鏈地址，他將執行以下的動作，Bob在產生LSN，並向中心化服務提出申請，，具體內容為(type=remittance, fromAddress=Bob地址, toAddress=Alice地址, value=轉移資產數量, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號)，接下來中心化服務會驗證側帳交易並於確認無誤後對其簽章，更新側鏈帳本及餘額，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，Bob及稽核員皆可對這筆收據進行稽核，最後待挑戰期過後，若沒有人針對此階段任何側帳交易有異議，中央式服務即可執行**finalize**方法，結束這個階段。
+
+##### 中心化服務竄改交易
+
+![](https://i.imgur.com/Cyrh7Z4.png)
+
+若Bob提出交易申請於側鏈轉移資產到Thief的側鏈地址，數量為50個，但中央式服務在收到交易申請後，在側鏈替Bob寫入的交易金額為錯誤的100個，試圖造成Bob損失，圖利Thief，則中心化服務會在第二步驟竄改交易金額後，於側鏈更新錯誤帳本及餘額，取得錯誤收據後，回傳給Bob，此時Bob收到錯誤收據並於驗證階段時，將會發現該錯誤收據的金額與當時傳給中心化服務並含有Bob簽名的側帳不符，具體內容為(clientLtxHash=Bob對lightTxHash的簽章, serverLtxHash=中央式服務針對lightTxHash的簽章, type=remittance, from=Bob地址, to=Thief地址, value=錯誤金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=Bob側鏈更新餘額, toBalance=Thief側鏈更新餘額，lightTxHash=keccak256(lightTxData))，Bob會發現clientLtxHash與serverLtxHash的簽名內容不一致，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，Bob即可對這筆錯誤收據提出抗議，即便Bob未發現錯誤收據，稽核員在挑戰期也可以代替Bob驗證這筆錯誤收據並提出抗議，取得賠償金。
+
+##### 側鏈交易無回應
+
+若側鏈參與方與中心化服務提出側鏈交易申請後，中心化服務不回應，則側鏈參與方即可執行提幣的動作，這樣就會回到當時withdraw所述，假設中心化服務還是不回應，待withdrawTimeout時限一到，提幣紀錄中的withdrawed仍為false時，表示中央式服務沒有盡到該盡的責任，則此時Bob可以透過執行智能合約之**withdrawTimeout**方法，告知合約自己的提幣編號，待智能合約驗證地址該WSN所指的提幣紀錄中，withdrawed確實為false，則取出該筆提幣紀錄的value，並轉移value個資產回Bob在主鏈的地址。
 
 ### 競品分析
 #### Payment Channel / Raiden Network
