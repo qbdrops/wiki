@@ -202,34 +202,12 @@
 
 完整資料格式可分為以下三種:
 - Deposit 
-```
-lightTx = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
-    lightTxData: {
-        type: 'deposit',
-        from: 'null',    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
-        value: 100,
-        fee: 5,
-        LSN: 2,
-        stageHeight: 1
-    },
-    sig:{
-        clientLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        },
-        serverLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
-    }
-
-}
-```
 - Remittance
+- Withdraw
+
+- Instant withdraw
+
+    底下是一個`lightTx`的詳細資料，其中type會根據交易型態而更動，以remittance為例：
 ```
 lightTx = {
     lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
@@ -256,33 +234,7 @@ lightTx = {
     }
 }
 ```
-- Withdraw
-```
-lightTx = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
-    lightTxData: {
-        type: 'withdraw',
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
-        to: 'null',
-        value: 100,
-        fee: 5,
-        LSN: 2,
-        stageHeight: 1
-    },
-    sig:{
-        clientLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        },
-        serverLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
-    }
-}
-```
+
 ### 收據 Receipt
 收據為側鏈包含買賣雙方交易餘額之交易內容，其中:
 
@@ -294,46 +246,12 @@ lightTx = {
 
 完整資料格式可分為以下三種:
 - Deposit
-```
-receipt = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
-    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
-    lightTxData: {
-        type: 'deposit',
-        from: 'null',    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
-        value: 100,
-        fee: 5,
-        LSN: 2,
-        stageHeight: 1
-    },
-    receiptData: {
-        GSN: 20,
-        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
-        fromBalance: 0,
-        toBalance: 500
-    },
-    
-    sig:{
-        clientLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        },
-        serverLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        },
-        serverReceiptHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
-    }
-}
-```
+
 - Remittance
+- Withdraw
+- Instant withdraw
+
+    底下是一個`lightTx`的詳細資料，其中type會根據交易型態而更動，以remittance為例：
 ```
 receipt = {
     lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
@@ -373,51 +291,12 @@ receipt = {
     }
 }
 ```
-- Withdraw
-```
-receipt = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
-    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
-    lightTxData: {
-        type: 'withdraw',
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
-        to: 'null',
-        value: 100,
-        fee: 5,
-        LSN: 2,
-        stageHeight: 1
-    },
-    receiptData: {
-        GSN: 22,
-        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
-        fromBalance: 100,
-        toBalance: 0
-    },
-    
-    sig:{
-        clientLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        },
-        serverLtxHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        },
-        serverReceiptHash:{
-            v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
-        }
-    }
-}
-```
-### 索引莫克樹 Indexed Merkle Tree
 
+### 索引莫克樹 Indexed Merkle Tree
+索引莫克樹為儲存資料雜湊值的資料結構，特性是可以將大量側帳 建構成一個32bytes的雜湊值，另外可以即時定位索引莫克樹中單一資料雜湊值的位置，以做到即時稽核特定資料的目的。
 ![](https://i.imgur.com/54x0izT.png)
 
-為儲存資料雜湊值的資料結構，特性是可以將大量側帳 建構成一個32bytes的雜湊值，另外可以即時定位索引莫克樹中單一資料雜湊值的位置，以做到即時稽核特定資料的目的。
+以上圖為例介紹索引莫克樹，假設今天有一筆資料為Element3，圖片中的索引莫克樹樹高為3，節點編號8到15為葉節點，在索引默克樹中，我們會使用有索引函式keccak256(Element3)%(葉節點數量)，算出Element3將放到莫克樹中的特定葉節點位置，假設Element3放在節點編號13的位置下，從圖中可以看到編號13的葉節點底下已有Element1及Element2兩筆資料，則Element3會接在後方，當所有Element放在葉節點底下後，節點8到15會依照底下Element的數量算出該節點的雜湊值，如圖中節點編號13的雜湊值是由三個Element由keccak256(Element1+Element2+Element3)運算得出。待葉節點8到15雜湊值運算結束後，節點編號1到7的內節點可以開始計算其雜湊值，例如編號4的節點雜湊值是keccak256('0x888' + '0x999')，依此類推，最後產生出節點編號1的雜湊值我們稱為根雜湊(Root hash)，可以視為索引莫克樹中所有資料的完整性證據，一旦任何放在葉節點的資料作修改，推導出的根雜湊就會不一致。
 ### 收據樹 Receipt Tree
 為索引莫克樹之資料結構，在側鏈協定裡，中心化服務會持續接收客戶端送來的側帳產生對應的收據，將每筆收據儲存起來，並在側鏈新增區段時產生收據樹，把根雜湊值放到智能合約上，以利後續稽核員與客戶端可以和去中心化儲存媒體取得相關之密碼學證據對收據進行驗證。
 ### 餘額樹 Balance Tree
@@ -604,7 +483,7 @@ indexed merkle tree
 1. 任何用戶在側鏈產生的轉帳，都要經過中心化服務的驗證，才會進一步更改側鏈節點中的收據樹與餘額樹，在此過程，中心化服務都可能透過竄改側鏈節點程式驗證簽章演算法或直接竄改這些轉帳資料
 2. 雖然任何側鏈用戶皆可產生交易，但此時此刻決定是否出帳的記帳權，始終在中心化服務身上
 3. 正常的存幣、提幣等行為，中心化服務會需要回傳一筆收據給用戶，但中心化服務有控制權決定是否真的要傳送收據
-4. 稽核過程所需的Indexed Merkle Tree, Balance Tree等數據結構，中心化服務還是可以控制是否傳送給稽核員核查
+4. 稽核過程所需的Receipt Tree, Balance Tree等數據結構，中心化服務還是可以控制是否傳送給稽核員核查
 
 因此在整個側鏈的運作中，中心化服務有以上幾個時間點有機會操弄側鏈用戶的交易資料，進一步圖利自身或與中心化服務共謀的用戶。
 
