@@ -1,4 +1,4 @@
-# 無窮鏈白皮書 Infinitechain White Paper
+# Infinitechain 金流側鏈白皮書
 
 ---
 
