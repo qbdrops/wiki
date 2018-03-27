@@ -23,7 +23,8 @@
         - 中心化服務 Central service
         - 客戶端 Client
         - 稽核員 Auditer
-        - 去中心化儲存媒體
+        - 去中心化儲存媒體 Decentralized Storage
+        - 無窮鏈合約 Infinitechain Contract
     - 資料模型 Data Model
         - 區段 Stage
         - 側帳 Light Transaction
@@ -57,10 +58,6 @@
     - 金融服務
     - Streaming Service
     - E-Commerce
-
-- 可能攻擊 Possible Attack
-- 鏈中鏈 Chain on Chain
-- 如何解決規模問題？ How to Solve Scalability?
 
 # 摘要 Abstract
 區塊鏈技術的應用越來越普及，然而現行的公有鏈存在一些限制，包含速度、隱私等等的挑戰，使得很多應用皆難以落地發展．無窮鏈在技術應用上、共識機制上以及經濟模型上都提出了創新的方式來處理這些問題，在技術上採取主側鏈架構來增加每秒交易數量同時做到全網共識，而共識上，無窮鏈提出了輕量級挖礦的方式，讓全球用戶都可以公平的取得出塊權而不被礦池壟斷，最後在經濟模型上，我們提出了一個利他點數，讓區塊鏈的用戶們願意共同維護這個區塊鏈社會，並且在這個區塊鏈網路中可以藉由利他點數、來累積信用．
@@ -180,9 +177,14 @@
 
 稽核員是無窮鏈網路中負責維護側鏈安全與穩定的執法者，確保任何側鏈不會因中心化服務之共謀或錯帳，導致客戶端實質上的損失。
 稽核員可以是無窮鏈網路上的任意一個節點、客戶甚至是其他中心化服務，意味著任何人都可以對任意一條無窮鏈側鏈進行稽核。
+
 ### 去中心化儲存媒體
 去中心化儲存媒體是利用無窮鏈節點構成的一種分散式檔案儲存系統，該系統擁有資料不可串改與單點失效不影響資料完整性的特點。
 主要用於儲存中心化服務產生的索引莫克樹，並產生對應的訪問地址(Address)，以利稽核員對相應區段(Stage)的索引莫克樹進行稽核。
+
+### 無窮鏈合約
+側鏈
+
 ## 資料模型 Data Model
 ### 區段 Stage
 區段是指側鏈於特定期間內智能合約上的狀態，其內容包含索引莫克樹的根雜湊值roothash，根雜湊值代表一個密碼學證據，是依照儲存在索引莫克樹中一批側帳所產生出的雜湊值，可用來對索引莫克樹中任何一筆側帳做稽核。
@@ -202,12 +204,37 @@
 
 完整資料格式可分為以下三種:
 - Deposit 
-- Remittance
-- Withdraw
-
-- Instant withdraw
 
-    底下是一個`lightTx`的詳細資料，其中type會根據交易型態而更動，以remittance為例：
+```
+lightTx = {
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
+    lightTxData: {
+        type: 'deposit',
+        from: 'null',    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 100,
+        fee: 5,
+        LSN: 2,
+        stageHeight: 1
+    },
+    sig:{
+        clientLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        },
+        serverLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+    }
+
+}
+```
+
+- Remittance
+
 ```
 lightTx = {
     lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
@@ -215,6 +242,35 @@ lightTx = {
         type: 'remittance',
         from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
         to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 100,
+        fee: 5,
+        LSN: 2,
+        stageHeight: 1
+    },
+    sig:{
+        clientLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        },
+        serverLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+    }
+}
+```
+
+- Withdraw
+
+```
+lightTx = {
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+    lightTxData: {
+        type: 'withdraw',
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
+        to: 'null',
         value: 100,
         fee: 5,
         LSN: 2,
@@ -247,11 +303,48 @@ lightTx = {
 完整資料格式可分為以下三種:
 - Deposit
 
-- Remittance
-- Withdraw
-- Instant withdraw
+```
+receipt = {
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
+    lightTxData: {
+        type: 'deposit',
+        from: 'null',    
+        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        value: 100,
+        fee: 5,
+        LSN: 2,
+        stageHeight: 1
+    },
+    receiptData: {
+        GSN: 20,
+        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+        fromBalance: 0,
+        toBalance: 500
+    },
+    
+    sig:{
+        clientLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        },
+        serverLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        },
+        serverReceiptHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+    }
+}
+```
 
-    底下是一個`lightTx`的詳細資料，其中type會根據交易型態而更動，以remittance為例：
+- Remittance
+
 ```
 receipt = {
     lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
@@ -292,11 +385,53 @@ receipt = {
 }
 ```
 
+- Withdraw
+
+```
+receipt = {
+    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
+    lightTxData: {
+        type: 'withdraw',
+        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
+        to: 'null',
+        value: 100,
+        fee: 5,
+        LSN: 2,
+        stageHeight: 1
+    },
+    receiptData: {
+        GSN: 22,
+        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+        fromBalance: 100,
+        toBalance: 0
+    },
+    
+    sig:{
+        clientLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        },
+        serverLtxHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        },
+        serverReceiptHash:{
+            v: 28,
+            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        }
+    }
+}
+```
+
 ### 索引莫克樹 Indexed Merkle Tree
-索引莫克樹為儲存資料雜湊值的資料結構，特性是可以將大量側帳 建構成一個32bytes的雜湊值，另外可以即時定位索引莫克樹中單一資料雜湊值的位置，以做到即時稽核特定資料的目的。
+
 ![](https://i.imgur.com/54x0izT.png)
 
-以上圖為例介紹索引莫克樹，假設今天有一筆資料為Element3，圖片中的索引莫克樹樹高為3，節點編號8到15為葉節點，在索引默克樹中，我們會使用有索引函式keccak256(Element3)%(葉節點數量)，算出Element3將放到莫克樹中的特定葉節點位置，假設Element3放在節點編號13的位置下，從圖中可以看到編號13的葉節點底下已有Element1及Element2兩筆資料，則Element3會接在後方，當所有Element放在葉節點底下後，節點8到15會依照底下Element的數量算出該節點的雜湊值，如圖中節點編號13的雜湊值是由三個Element由keccak256(Element1+Element2+Element3)運算得出。待葉節點8到15雜湊值運算結束後，節點編號1到7的內節點可以開始計算其雜湊值，例如編號4的節點雜湊值是keccak256('0x888' + '0x999')，依此類推，最後產生出節點編號1的雜湊值我們稱為根雜湊(Root hash)，可以視為索引莫克樹中所有資料的完整性證據，一旦任何放在葉節點的資料作修改，推導出的根雜湊就會不一致。
+為儲存資料雜湊值的資料結構，特性是可以將大量側帳 建構成一個32bytes的雜湊值，另外可以即時定位索引莫克樹中單一資料雜湊值的位置，以做到即時稽核特定資料的目的。
 ### 收據樹 Receipt Tree
 為索引莫克樹之資料結構，在側鏈協定裡，中心化服務會持續接收客戶端送來的側帳產生對應的收據，將每筆收據儲存起來，並在側鏈新增區段時產生收據樹，把根雜湊值放到智能合約上，以利後續稽核員與客戶端可以和去中心化儲存媒體取得相關之密碼學證據對收據進行驗證。
 ### 餘額樹 Balance Tree
@@ -305,150 +440,299 @@ receipt = {
 ## 協定 Protocol
 ### 存幣
 ![](images/deposit.jpg)
-#### _客戶端_ 向 _區塊鏈_ 申請存幣 (1~2)
-客戶端呼叫無窮鏈合約`proposeDeposit`方法
-合約新增一筆存幣紀錄 `deposit record`
+#### _客戶端_ 向 _無窮鏈合約_ 申請存幣 (1~2)
+首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
-Deposit Record = [DSN, address, value, timeout, deposited]
+Si   = getLatestStageHeight(C)
+LSN  = getLSN(Ad)
+t    = makeLightTx(Si, LSN, Ad, v, 'deposit')
+tc   = signLightTx(t)
 ```
 
-例如 Bob(0x123) 存 2 eth
-stageHeight: 3
-DSN: 1
-value: 2
-address: 0x123
-timeout: 600s
-deposited: false
+接下來， _客戶端_ 呼叫 _無窮鏈合約_ 之 `proposeDeposit` 方法以提出存幣申請，這個方法會在合約新增一筆 `Deposit Log`：
 
-發出`ProposeDeposit`事件
+```
+Ld'  = *proposeDeposit(tc)
+```
 
+其中
+
+```
+Ld   = [l1, l2, ...]
+Ld'  = push(Ld, l)
+l    = [Si, LSN, Ad, v, timeout, Fd]
+Fd   = false
+```
+
+存幣申請後， _無窮鏈合約_ 即廣播 `ProposeDeposit` 事件，其中包含 `lightTransaction`。
 
 #### _中心化服務_ 監聽申請存幣事件並產生存幣側帳送至 _節點_ (3~5)
-中心化服務監聽 `ProposeDeposit` 事件
-中心化服務產生存幣側帳並對其簽章
-將側帳送至節點
-側帳
+之後， _中心化服務_ 監聽 _無窮鏈合約_ 的 `ProposeDeposit` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則 _中心化服務_ 再對其產生簽章並送至 _節點_ ：
 
 ```
-lightTx: {
+result = verifyLightTx(tc)
 
+if (result == true) {
+  ts = signLightTx(tc)
+  r = sendLightTx(ts, NodeURL)
 }
 ```
-#### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~8)
-節點驗證側帳
-呼叫 `makeReceipt` 產生收據
-更新收據樹及餘額樹
 
-#### _中心化服務_ 取得收據並向 _區塊鏈_ 執行存幣 (9~13)
-中心化服務取得收據並對收據簽章
-驗證收據
-執行存幣 呼叫 `deposit`
-中心化服務呼叫 `deposit` 方法並帶上 `receipt`
-區塊鏈驗證 `receipt` 無誤即更動 `deposit record` `deposited` 為 `true`
+#### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~8)
+_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
+
+```
+result = verifyLightTx(ts)
+
+if (result == true) {
+  r = makeReceipt(ts)
+  updateBalance(r)
+  saveReceipt(r)
+  return r
+}
+```
+
+#### _中心化服務_ 取得收據並向 _無窮鏈合約_ 執行存幣 (9~13)
+_中心化服務_ 取得 `receipt` 後即對其簽章，接著呼叫合約之 `deposit` 方法以執行存幣：
+
+```
+rs = signReceipt(r)
+Ld' = *deposit(rs)
+```
+
+其中
+
+```
+Ld   = [l1, l2, ..., l]
+Ld'  = [l1, l2, ..., l']
+l'   = [Si, LSN, Ad, v, timeout, Fd']
+Fd'  = true
+```
+
+存幣執行後， _無窮鏈合約_ 即廣播 `Deposit` 事件，其中包含 `receipt`。
 
 #### _客戶端_ 監聽存幣事件並取得收據 (14~15)
-監聽 `deposit` 事件
-取得收據
-客戶端將 `receipt` 存起來
+最後， _客戶端_ 監聽 _無窮鏈合約_ `Deposit` 事件以取得 `receipt` 並儲存：
+
+```
+saveReceipt(rs)
+```
 
 ### 提幣 Withdraw
 ![](images/withdraw.jpg)
-#### _客戶端_ 向 _區塊鏈_ 申請提幣 (1~2)
+#### _客戶端_ 向 _無窮鏈合約_ 申請提幣 (1~2)
+首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
+
 ```
-Deposit Record = [WSN, address, value, timeout, withdrawed]
+Si   = getLatestStageHeight(C)
+LSN  = getLSN(Ad)
+t    = makeLightTx(Si, LSN, Ad, v, 'withdraw')
+tc   = signLightTx(t)
 ```
+
+接下來， _客戶端_ 呼叫 _無窮鏈合約_ 之 `proposeWithdraw` 方法以提出提幣申請，這個方法會在合約新增一筆 `Withdraw Log`：
+
+```
+Lw'  = *proposeWithdraw(tc)
+```
+
+其中
+
+```
+Lw   = [l1, l2, ...]
+Lw'  = push(Lw, l)
+l    = [Si, LSN, Ad, v, timeout, Fw]
+Fw   = false
+```
+
+提幣申請後， _無窮鏈合約_ 即廣播 `ProposeWithdraw` 事件，其中包含 `lightTransaction`。
 
 #### _中心化服務_ 監聽申請提幣事件並產生提幣側帳送至 _節點_ (3~5)
-中心化服務監聽 `proposeWithdrawal` 事件
-中心化服務產生提幣側帳並對其簽章
-將側帳送至節點
+之後， _中心化服務_ 監聽 _無窮鏈合約_ 的 `ProposeWithdraw` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則 _中心化服務_ 再對其產生簽章並送至 _節點_ ：
+
+```
+result = verifyLightTx(tc)
+
+if (result == true) {
+  ts = signLightTx(tc)
+  r = sendLightTx(ts, NodeURL)
+}
+```
 
 #### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~8)
-節點驗證側帳
-呼叫 `makeReceipt` 產生收據
-更新收據樹及餘額樹
+_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
 
-#### _中心化服務_ 取得收據並向 _區塊鏈_ 提交收據 (9~13)
-中心化服務取得收據並對收據簽章
-驗證收據
-中心化服務呼叫 `submitReceipt` 方法並帶上 `receipt`
-區塊鏈驗證 `receipt` 無誤即更動 `deposit record` `deposited` 為 `true`
+```
+result = verifyLightTx(ts)
 
+if (result == true) {
+  r = makeReceipt(ts)
+  updateBalance(r)
+  saveReceipt(r)
+  return r
+}
+```
+
+#### _中心化服務_ 取得收據並向 _無窮鏈合約_ 提交收據 (9~13)
+_中心化服務_ 取得 `receipt` 後即對其簽章，接著呼叫合約之 `submitReceipt` 方法以提交收據：
+
+```
+rs = signReceipt(r)
+*submitReceipt(rs)
+```
+
+提交收據後， _無窮鏈合約_ 即廣播 `SubmitReceipt` 事件，其中包含 `receipt`。
 
 #### _客戶端_ 監聽收據提交事件並取得收據 (14~15)
-監聽 `submitReceipt`
-取得 `receipt`
-客戶端儲存 `receipt`
+最後， _客戶端_ 監聽 _無窮鏈合約_ `SubmitReceipt` 事件以取得 `receipt` 並儲存：
+
+```
+saveReceipt(rs)
+```
 
 #### _中心化服務_ 新增側鏈區段並達成最終性 (16)
-經過稽核 / 抗議 / 自清 / 付罰金
-後面會詳細說明
-提幣必須經過挑戰期
+提幣必須經過挑戰期，需經過稽核 / 抗議 / 自清 / 付罰金等流程以達成最終性，其詳細過程會於下一個章節說明。
 
-#### _客戶端_ 於最終性達成後即可向 _區塊鏈_ 執行提幣 (17~18)
-呼叫 `withdraw` 並帶上 `receipt`
-驗證 `receipt`
-執行提幣
+#### _客戶端_ 向 _無窮鏈合約_ 執行提幣 (17~18)
+最後， _客戶端_ 於最終性達成後即可呼叫 _無窮鏈合約_ `withdraw` 方法以執行提幣：
+
+```
+Lw' = *withdraw(rs)
+```
+
+其中
+
+```
+Lw   = [l1, l2, ..., l]
+Lw'  = [l1, l2, ..., l']
+l'   = [Si, LSN, Ad, v, timeout, Fw']
+Fw'  = true
+```
 
 ### 即時提幣
 ![](images/instantWithdraw.jpg)
 #### _客戶端_ 產生即時提幣側帳並送至 _中心化服務_ (1~2)
-```
-lightTx = {
+首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
-}
+```
+Si   = getLatestStageHeight(C)
+LSN  = getLSN(Ad)
+t    = makeLightTx(Si, LSN, v, Ad, 'instanctWithdraw')
+tc   = signLightTx(t)
+r    = sendLightTx(tc, ServerURL)
 ```
 
 #### _中心化服務_ 驗證側帳並送至 _節點_ (3~5)
-中心化服務驗證側帳
-簽章
-傳送給節點
+_中心化服務_ 取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至 _節點_ ：
+
+```
+result = verifyLightTx(tc)
+
+if (result == true) {
+  ts = signLightTx(tc)
+  r = sendLightTx(ts, NodeURL)
+}
+```
 
 #### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~7)
-節點驗證側帳
-產生收據
-回傳中心化服務
-更新 receipt tree 及 balance tree
+_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
+
+```
+result = verifyLightTx(ts)
+
+if (result == true) {
+  r = makeReceipt(ts)
+  updateBalance(r)
+  saveReceipt(r)
+  return r
+}
+```
 
 #### _中心化服務_ 取得收據並送至 _客戶端_ (8~9)
-中心化服務取得 `receipt`
-簽章
-送回客戶端
+_中心化服務_ 取得 `receipt` 後即對其產生簽章並回傳 _客戶端_ ：
+
+```
+rs = signReceipt(r)
+return rs
+```
 
 #### _客戶端_ 取得收據 (10~12)
-客戶端儲存 `receipt`
+接著， _客戶端_ 取得收據後即儲存：
+
+```
+saveReceipt(rs)
+```
 
 #### _客戶端_ 執行即時提幣 (14~15)
-呼叫 `instantWithdraw` 並帶上 `receipt`
+最後， _客戶端_ 呼叫 `instantWithdraw` 方法以執行即時提幣：
+
+```
+Lw' = *instantWithdraw(rs)
+```
+
+其中
+
+```
+Lw   = [l1, l2, ...]
+Lw'  = push(Lw, l)
+l    = [Si, LSN, Ad, v, timeout, Fw]
+Fw   = true
+```
 
 ### 轉帳 Remittance
 ![](images/remittance.jpg)
 #### _客戶端_ 產生轉帳側帳並送至 _中心化服務_ (1~2)
+首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
+
 ```
-lighTx = {
-}
+Si   = getLatestStageHeight(C)
+LSN  = getLSN(Ad)
+t    = makeLightTx(Si, LSN, v, Ad, 'remittance')
+tc   = signLightTx(t)
+r    = sendLightTx(tc, ServerURL)
 ```
-簽章
 
 #### _中心化服務_ 驗證側帳並送至 _節點_ (3~5)
-驗證
-簽章
-傳送給節點
+_中心化服務_ 取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至 _節點_ ：
+
+```
+result = verifyLightTx(tc)
+
+if (result == true) {
+  ts = signLightTx(tc)
+  r = sendLightTx(ts, NodeURL)
+}
+```
 
 #### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~7)
-驗證
-產生收據
-更新 `receipt tree` 及 `balance tree`
+_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
+
+```
+result = verifyLightTx(ts)
+
+if (result == true) {
+  r = makeReceipt(ts)
+  updateBalance(r)
+  saveReceipt(r)
+  return r
+}
+```
 
 #### _中心化服務_ 取得收據並送至 _客戶端_ (8~9)
-驗證
-簽章
-送至客戶端
+_中心化服務_ 取得 `receipt` 後即對其產生簽章並回傳 _客戶端_ ：
+
+```
+rs = signReceipt(r)
+return rs
+```
 
 #### _客戶端_ 取得收據 (10~12)
-驗證
-儲存收據
+最後， _客戶端_ 取得收據後即儲存：
+
+```
+saveReceipt(rs)
+```
 
 ### 稽核與抗議 Auditing and objection
 ![](images/objection.jpg)
@@ -483,7 +767,7 @@ indexed merkle tree
 1. 任何用戶在側鏈產生的轉帳，都要經過中心化服務的驗證，才會進一步更改側鏈節點中的收據樹與餘額樹，在此過程，中心化服務都可能透過竄改側鏈節點程式驗證簽章演算法或直接竄改這些轉帳資料
 2. 雖然任何側鏈用戶皆可產生交易，但此時此刻決定是否出帳的記帳權，始終在中心化服務身上
 3. 正常的存幣、提幣等行為，中心化服務會需要回傳一筆收據給用戶，但中心化服務有控制權決定是否真的要傳送收據
-4. 稽核過程所需的Receipt Tree, Balance Tree等數據結構，中心化服務還是可以控制是否傳送給稽核員核查
+4. 稽核過程所需的Indexed Merkle Tree, Balance Tree等數據結構，中心化服務還是可以控制是否傳送給稽核員核查
 
 因此在整個側鏈的運作中，中心化服務有以上幾個時間點有機會操弄側鏈用戶的交易資料，進一步圖利自身或與中心化服務共謀的用戶。
 
@@ -664,20 +948,10 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 
 ## 側鏈交易流程分析
 此節會針對三種類型側帳交易的側鏈運行流程做說明，當側鏈參與方在側鏈產生三種不同型態的側帳交易時，中心化服務有可能做到的幾種攻擊手段，底下將一一做剖析。
-### Deposit
-
-當Deposit側帳產生時，側鏈參與方、中心化服務與主鏈會有多個互動步驟產生，下圖為每個步驟的細節:
-![](https://i.imgur.com/jb9o82D.png)
-
-若Bob要提交一個存幣申請，試圖進到某一條側鏈進行多次的微支付，他將執行以下的動作，Bob在鏈下產生當前stage中自己最新的交易側帳編號，稱**Local Sequence Number**，此後稱**LSN**，執行存幣，並向智能合約存入100個代幣，等到礦工打包此交易後，側鏈智能合約會在合約狀態中登記一筆存幣紀錄，具體內容為(type=deposit, address=Bob地址, value=存幣數量, stageHeight=預計此筆側帳將被放入側鏈哪個階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=存幣編號(DSN), depositTimeout=存幣逾時時間, deposited=是否成功存入側鏈)，其中，存幣逾時時間將會大於單一挑戰期的時間週期，而deposited表示中心化服務是否有誠實地將存幣正確的移轉至側鏈中，最後待存幣申請成功後，智能合約會廣播**存幣申請事件**。
-
-接下來會說明兩種中心化服務的惡意攻擊：
 
 #### 存幣無回應攻擊
 
 ![](https://i.imgur.com/91xPhWi.png)
-
-
 中心化服務在上圖第二步驟監聽到**存幣申請事件**後，若沒有後續幫助Bob在側鏈新增一筆存幣側帳，並增加Bob在側鏈對應地址的餘額，則等到智能合約中depositTimeout時限一到，相同存幣紀錄中的deposited仍為false時，表示中心化服務沒有盡到該盡的責任，則此時Bob可以透過執行智能合約之**depositTimeout**方法，告知合約自己的存幣編號，待智能合約驗證地址與該存幣編號所指的存幣紀錄中，deposited確實為false，則取出該筆存幣紀錄的value，並轉移value個資產回Bob在主鏈的地址，因此，整個過程Bob並不會因為中央式服務關閉或惡意不處理等問題，導致存幣無法取回。
 
 #### 錯誤存幣金額攻擊
@@ -687,13 +961,6 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 若Bob透過智能合約提出存幣申請，數量為100個，但中央式服務在監聽到存幣申請事件後，在側鏈替Bob寫入的存幣金額為錯誤的90個，試圖造成Bob損失，則當中央式服務試圖提交存幣收據給智能合約驗證時，會向合約提出以下資訊，(serverLtxHash=中央式服務針對lightTxHash的簽章, type=deposit, from=此處送方地址為null, to=Bob地址, value=側鏈存幣金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=存幣編號(DSN), serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=此處送方帳戶餘額為null, toBalance=Bob側鏈存幣後餘額，lightTxHash=keccak256(lightTxData))，此時，智能合約只需要根據存幣收據中的存幣編號，查詢出Bob在智能合約上的存幣申請，並比較兩者value數值是否相同，lightTxHash=keccak256(type||from||to||value||stageHeight||LSN)，以及receiptHash=keccak256(GSN||fromBalance||toBalance || lightTxHash)，以及檢查lightTxHash和serverLtxHash是否通過簽名驗證與receiptHash和serverReceiptHash是否通過簽名驗證，且兩者皆為服務端地址發送，成功後將更改deposited為true，接著才能廣播出**提交收據事件**，故在此處兩者value並不相同，無法通過智能合約驗證，deposited依然為false，除非中央式服務再提出正確金額的收據，否則待depositTimeout時限一到，Bob就能將此次存幣申請，視同無回應，可直接從合約移轉存幣回自己的地址。
 
 ### Withdraw
-
-當Withdraw側帳產生時，側鏈參與方、中心化服務與主鏈會有多個互動步驟產生，下圖為每個步驟的細節:
-![](https://i.imgur.com/J3VfmS8.png)
-
-若Bob試圖要從側鏈轉移資產回自己的主鏈幣地址，他將執行以下的動作，Bob在鏈下產生LSN，並向智能合約提出提幣申請，等到礦工打包此交易後，智能合約會在合約狀態中登記一筆提幣紀錄，具體內容為(type=withdraw, address=Bob地址, value=提幣數量, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=提幣編號(WSN), withdrawTimeout=提幣逾時時間, withdrawed=是否成功提幣)，其中，提幣逾時時間將會大於單一挑戰期的時間週期，而withdrawed表示中央式服務是否有誠實移轉側鏈資產回主鏈Bob地址中，接著智能合約將廣播**提幣申請事件**，並在側鏈更新側帳，回傳收據等工作，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，最後待挑戰期過後，若沒有人針對此筆提幣有異議，中央式服務即可執行**finalize**方法，使包含此提幣申請的階段帳本達成最終性，同時更改withdrawed為true，接著智能合約會廣播**提幣成功事件**，此後Bob可立即執行 智能合約中**withdraw** 方法從智能合約轉出資產回自己主鏈地址。
-
-接下來會說明兩種中心化服務的惡意攻擊：
 #### 提幣無回應攻擊
 
 ![](https://i.imgur.com/tneNlv1.png)
@@ -707,13 +974,6 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 若Bob透過智能合約提出提幣申請，數量為100個，但中央式服務在監聽到提幣申請事件後，在側鏈替Bob寫入的提幣金額為錯誤的90個，試圖造成Bob損失，則當中央式服務試圖提交提幣收據給智能合約驗證時，會向合約提出以下資訊，(serverLtxHash=中央式服務針對lightTxHash的簽章, type=withdraw, from=Bob地址, to=此處收方為null, value=側鏈提幣金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=提幣編號(WSN), serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=Bob側鏈提幣後餘額, toBalance=此處收方帳戶餘額為null)，此時，智能合約只需要根據提幣收據中的WSN，查詢出Bob在智能合約上的提幣申請，並比較兩者value數值是否相同，接著根據以下公式從收據資訊中計算lightTxHash=keccak256(type||from||to||value||stageHeight||LSN)，以及receiptHash=keccak256(GSN||fromBalance||toBalance || lightTxHash)，以及檢查lightTxHash和serverLtxHash是否通過簽名驗證與receiptHash和serverReceiptHash是否通過簽名驗證，且兩者皆為服務端地址發送，接著才能廣播出**提交收據事件**，故在此處兩者value並不相同，無法通過智能合約驗證，提幣紀錄中的withdrawed依然為false，除非中央式服務再提出正確金額的收據，否則待withdrawTimeout時限一到，Bob就能直接將此次提幣申請，視同無回應，可直接從合約移轉value個資產回自己的主鏈地址。
 
 ### Remittance
-
-當Remittance側帳產生時，側鏈參與方與中心化服務會有多個互動步驟產生，下圖為每個步驟的細節:
-![](https://i.imgur.com/7CVzuC4.png)
-
-若Bob試圖要從側鏈轉移資產到Alice的側鏈地址，他將執行以下的動作，Bob在產生LSN，並向中心化服務提出申請，，具體內容為(type=remittance, fromAddress=Bob地址, toAddress=Alice地址, value=轉移資產數量, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號)，接下來中心化服務會驗證側帳交易並於確認無誤後對其簽章，更新側鏈帳本及餘額，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，Bob及稽核員皆可對這筆收據進行稽核，最後待挑戰期過後，若沒有人針對此階段任何側帳交易有異議，中央式服務即可執行**finalize**方法，結束這個階段。
-
-接下來會說明兩種中心化服務的惡意攻擊：
 #### 中心化服務竄改交易
 
 ![](https://i.imgur.com/Cyrh7Z4.png)
@@ -749,6 +1009,3 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 無窮鏈可以讓每個收視戶稽核自己的付款紀錄，同時讓內容提供商了解結款的情形，並且不需要了解所有人的個資就可以確保交易的完整性，達到資訊對等．
 ## E-Commerce
 電商平台已經是相當完整並成熟的產業之一，現在很多人已經相當習慣使用電商平台來做購買產品；使用無窮鏈的金流側鏈服務即可以快速地使用虛擬貨幣微支付來購買產品，同時也可以讓各個用戶確認自己的帳，這個支付系統即可達到快速、安全、不可篡改．
-# 可能攻擊 Possible Attack
-# 鏈中鏈 Chain on Chain
-# 如何解決規模問題？ How to Solve Scalability?
