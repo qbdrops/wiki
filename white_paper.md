@@ -257,7 +257,6 @@ v   : value of assets
 Fd  : boolean of deposit flag
 Fw  : boolean of withdraw flag
 C   : Infinitechain contract
-*f  : contract function
 ```
 
 ### 存幣
