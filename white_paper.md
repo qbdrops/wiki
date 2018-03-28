@@ -102,7 +102,7 @@
 主要用於儲存中心化服務產生的索引莫克樹，並產生對應的訪問地址(Address)，以利稽核員對相應區段(Stage)的索引莫克樹進行稽核。
 
 ### 無窮鏈合約
-無窮鏈合約是中心化服務啟動側鏈需部署的智能合約，合約內制定了許多啟動側鏈後的規則，保證中心化服務維持側鏈運作，同時保障中心化服務與側鏈參與方的權益。
+無窮鏈合約是中心化服務啟動側鏈需部署的智能合約，合約內制定了許多啟動側鏈後的規則，保證中心化服務維持側鏈運作，同時保障中心化服務與側鏈參與方的權益。
 
 ## 資料模型 Data Model
 ### 區段 Stage
@@ -119,7 +119,7 @@
     6. fee : 手續費
     7. LSN : 全名為 Local Sequence Number，是客戶端每筆交易之亂數編號
     8. stageHeight : 側鏈區段高度
-    9. clientLtxSignature : 客戶端對 lightTxHash 簽章之結果
+    9. clientLtxSignature : 客戶端對 lightTxHash 簽章之結果
     10. serverLtxSignature : 中心化服務對 lightTxHash 簽章之結果
 
 完整資料格式可分為以下四種:
@@ -167,7 +167,7 @@ lightTx = {
     2. GSN : 全名為 Global Sequence Number，是側鏈中某階段所有客戶端交易之順序編號
     3. fromBalance : 交易送方之餘額
     4. toBalance : 交易收方之餘額
-    5. serverReceiptSignature : 中心化服務對 receiptHash 簽章之結果
+    5. serverReceiptSignature : 中心化服務對 receiptHash 簽章之結果
 
 完整資料格式可分為以下四種:
 - Deposit
@@ -217,7 +217,7 @@ receipt = {
 }
 ```
 
-接下來在`協定`的章節中，receipt將會以符號表中的`r`為代稱。
+接下來在`協定`的章節中，receipt將會以符號表中的`r`為代稱。
 
 ### 索引莫克樹 Indexed Merkle Tree
 
