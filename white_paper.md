@@ -46,8 +46,6 @@
     - 金融服務
     - Streaming Service
     - E-Commerce
-- 附錄A
-
 # 簡介 Introduction
 ## 區塊鏈的挑戰
 目前區塊鏈的發展遇到相當多的挑戰，包含技術應用、共識機制以及經濟模型上的挑戰．
@@ -104,7 +102,7 @@
 主要用於儲存中心化服務產生的索引莫克樹，並產生對應的訪問地址(Address)，以利稽核員對相應區段(Stage)的索引莫克樹進行稽核。
 
 ### 無窮鏈合約
-無窮鏈合約是中心化服務啟動側鏈需部署的智能合約，合約內制定了許多啟動側鏈後的規則，保證中心化服務維持側鏈運作，同時保障中心化服務與側鏈參與方的權益。
+無窮鏈合約是中心化服務啟動側鏈需部署的智能合約，合約內制定了許多啟動側鏈後的規則，保證中心化服務維持側鏈運作，同時保障中心化服務與側鏈參與方的權益。
 
 ## 資料模型 Data Model
 ### 區段 Stage
@@ -119,19 +117,19 @@
     4. to : 交易收方之地址
     5. value : 交易金額
     6. fee : 手續費
-    7. LSN : 全名為 Local Sequence Number，是客戶端每筆交易之順序編號
+    7. LSN : 全名為 Local Sequence Number，是客戶端每筆交易之亂數編號
     8. stageHeight : 側鏈區段高度
-    9. clientLtxHash : 客戶端對 lightTxHash 簽名之結果
-    10. serverLtxHash : 中心化服務對 lightTxHash 簽名之結果
+    9. clientLtxSignature : 客戶端對 lightTxHash 簽章之結果
+    10. serverLtxSignature : 中心化服務對 lightTxHash 簽章之結果
 
-完整資料格式可分為以下三種:
+完整資料格式可分為以下四種:
 
 - Deposit 
 - Remittance
 - Withdraw
 - Instant withdraw
 
-底下是一個`lightTransaction`的資料格式，我們簡稱為`lightTx`，其中type會根據交易型態而更動，以remittance為例：
+底下是一個`lightTransaction`的JSON格式，我們簡稱為`lightTx`，其中type會根據交易型態而更動，以remittance為例：
 
 ```
 lightTx = {
@@ -146,12 +144,12 @@ lightTx = {
         stageHeight: 1
     },
     sig:{
-        clientLtxHash:{
+        clientLtxSignature:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         },
-        serverLtxHash:{
+        serverLtxSignature:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
@@ -160,6 +158,8 @@ lightTx = {
 }
 ```
 
+接下來在`協定`的章節中，light transaction將會以符號表中的`t`為代稱。
+
 ### 收據 Receipt
 收據為側鏈包含買賣雙方交易餘額之交易內容，其中:
 
@@ -167,15 +167,15 @@ lightTx = {
     2. GSN : 全名為 Global Sequence Number，是側鏈中某階段所有客戶端交易之順序編號
     3. fromBalance : 交易送方之餘額
     4. toBalance : 交易收方之餘額
-    5. serverReceiptHash : 中心化服務對 receiptHash 簽名之結果
+    5. serverReceiptSignature : 中心化服務對 receiptHash 簽章之結果
 
-完整資料格式可分為以下三種:
+完整資料格式可分為以下四種:
 - Deposit
 - Remittance
 - Withdraw
 - Instant withdraw
 
-底下是一個`receipt`的詳細資料，其中type會根據交易型態而更動，以remittance為例：
+底下是一個`receipt`的JSON格式，其中type會根據交易型態而更動，以remittance為例：
 
 ```
 receipt = {
@@ -198,17 +198,17 @@ receipt = {
     },
     
     sig:{
-        clientLtxHash:{
+        clientLtxSignature:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         },
-        serverLtxHash:{
+        serverLtxSignature:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         },
-        serverReceiptHash:{
+        serverReceiptSignature:{
             v: 28,
             r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
@@ -216,6 +216,8 @@ receipt = {
     }
 }
 ```
+
+接下來在`協定`的章節中，receipt將會以符號表中的`r`為代稱。
 
 ### 索引莫克樹 Indexed Merkle Tree
 
@@ -232,6 +234,32 @@ receipt = {
 同樣為索引莫克樹之資料結構，在側鏈協定裡，是中心化服務用來紀錄側鏈中所有客戶端之餘額，當中心化服務收到側帳產生對應之收據同時，會根據每筆收據動態更新餘額樹中客戶端之餘額。
 
 ## 協定 Protocol
+
+在描述協定前我們先定義一下常用到的符號：
+
+### 符號表
+
+```
+t   : light transaciton
+tc  : light transaction  include client signature
+ts  : tc include server signature
+r   : receipt include ts
+rs  : receipt include server signature
+LSN : local sequence number
+GSN : global sequence number
+Si  : stage height i
+Ld  : a set of deposit logs in smart contract
+Lw  : a set of withdraw logs in smart contract
+l   : log in Ld or Lw
+Ad  : address of account
+Ab  : balance of account
+v   : value of assets
+Fd  : boolean of deposit flag
+Fw  : boolean of withdraw flag
+C   : Infinitechain contract
+*f  : contract function
+```
+
 ### 存幣
 ![](images/deposit.jpg)
 
@@ -582,7 +610,7 @@ indexed merkle tree
 
 一個完整的側帳包含許多資訊，其中`lightTxData`內含了一個交易送方自願承諾的交易資訊，其中最容易被竄改的資料為交易金額`value`，以下舉例保有竄改機會的中心化服務可能在未經交易送方同意的狀況下，做出以下的行為，試圖以此竄改的結果圖利自身或特定用戶。
 
-假設Bob的地址`0x49aabbbe9141fe7a80804bdf01473e250a3414cb`試圖傳送給Alice，其地址為`0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a`，100個單位的代幣，則Bob可以透過Infinitechain SDK產生如下`lightTxData`資料，計算出`lightTxHash`，並對`lightTxHash`簽名，附加簽名回側帳資訊上。隨後傳送此側帳給中心化服務，等待出帳。
+假設Bob的地址`0x49aabbbe9141fe7a80804bdf01473e250a3414cb`試圖傳送給Alice，其地址為`0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a`，100個單位的代幣，則Bob可以透過Infinitechain SDK產生如下`lightTxData`資料，計算出`lightTxHash`，並對`lightTxHash`簽章，附加簽章回側帳資訊上。隨後傳送此側帳給中心化服務，等待出帳。
 
 在側鏈節點沒有被中心化服務竄改驗證簽章邏輯的情況下，可能產生以下兩種攻擊：
 
@@ -643,7 +671,7 @@ lightTx = {
 
 #### 竄改lightTxData與lightTxHash
 
-同上，**側鏈節點在未被竄改**的情況之下，側鏈節點將會重新透過`lightTxData`計算`lightTxHash`後，即可得知遭竄改的`lightTxData`與`lightTxHash`雖吻合，但中心化服務因無法得知交易送方之私鑰，無法偽造Bob對錯誤`lightTxHash`之合法簽名，故交易送方產生的`clientLtxHash`簽名與遭竄改的`lightTxHash`不吻合，因此側鏈節點將會拒絕此側帳。
+同上，**側鏈節點在未被竄改**的情況之下，側鏈節點將會重新透過`lightTxData`計算`lightTxHash`後，即可得知遭竄改的`lightTxData`與`lightTxHash`雖吻合，但中心化服務因無法得知交易送方之私鑰，無法偽造Bob對錯誤`lightTxHash`之合法簽章，故交易送方產生的`clientLtxHash`簽章與遭竄改的`lightTxHash`不吻合，因此側鏈節點將會拒絕此側帳。
 
 但側鏈節點本身可能依然是由中心化服務所保持，因此需要考慮中心化服務竄改側鏈節點驗證簽章的可能，使其跳過重新計算`lightTxData`與檢驗`lightTxHash`是否相同等程序，達成將竄改的側帳寫入側鏈節點中。
 
@@ -651,7 +679,7 @@ lightTx = {
 
 #### 竄改lightTxData
 
-錯誤的側帳寫入側鏈節點後，中心化服務需要對收據的`receiptHash`簽名，用戶則會取得錯誤的收據，其結構可能如下：
+錯誤的側帳寫入側鏈節點後，中心化服務需要對收據的`receiptHash`簽章，用戶則會取得錯誤的收據，其結構可能如下：
 
 ```
 receipt = {
@@ -697,7 +725,7 @@ receipt = {
 
 #### 竄改lightTxData與lightTxHash
 
-同理，用戶透過稽核演算法，將發現遭竄改的`lightTxData`與重新填入的`lightTxHash`雖吻合，但中心化服務因無法得知交易送方之私鑰，故無法偽造Bob對錯誤`lightTxHash`之合法簽名，故Bob在檢驗自己的簽名是否符合遭竄改的`lightTxHash`時，即會發現簽名不符，因此此收據不會通過稽核演算法之不可否認性檢查，此後，Bob就可以使用此錯誤之收據向主鏈上管理側鏈的智能合約執行抗議，經過挑戰期後即可取得押金。
+同理，用戶透過稽核演算法，將發現遭竄改的`lightTxData`與重新填入的`lightTxHash`雖吻合，但中心化服務因無法得知交易送方之私鑰，故無法偽造Bob對錯誤`lightTxHash`之合法簽章，故Bob在檢驗自己的簽章是否符合遭竄改的`lightTxHash`時，即會發現簽章不符，因此此收據不會通過稽核演算法之不可否認性檢查，此後，Bob就可以使用此錯誤之收據向主鏈上管理側鏈的智能合約執行抗議，經過挑戰期後即可取得押金。
 
 ### GSN
 
@@ -755,7 +783,7 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 
 ![](https://i.imgur.com/jtvya4j.png)
 
-若Bob透過智能合約提出存幣申請，數量為100個，但中央式服務在監聽到存幣申請事件後，在側鏈替Bob寫入的存幣金額為錯誤的90個，試圖造成Bob損失，則當中央式服務試圖提交存幣收據給智能合約驗證時，會向合約提出以下資訊，(serverLtxHash=中央式服務針對lightTxHash的簽章, type=deposit, from=此處送方地址為null, to=Bob地址, value=側鏈存幣金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=存幣編號(DSN), serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=此處送方帳戶餘額為null, toBalance=Bob側鏈存幣後餘額，lightTxHash=keccak256(lightTxData))，此時，智能合約只需要根據存幣收據中的存幣編號，查詢出Bob在智能合約上的存幣申請，並比較兩者value數值是否相同，lightTxHash=keccak256(type||from||to||value||stageHeight||LSN)，以及receiptHash=keccak256(GSN||fromBalance||toBalance || lightTxHash)，以及檢查lightTxHash和serverLtxHash是否通過簽名驗證與receiptHash和serverReceiptHash是否通過簽名驗證，且兩者皆為服務端地址發送，成功後將更改deposited為true，接著才能廣播出**提交收據事件**，故在此處兩者value並不相同，無法通過智能合約驗證，deposited依然為false，除非中央式服務再提出正確金額的收據，否則待depositTimeout時限一到，Bob就能將此次存幣申請，視同無回應，可直接從合約移轉存幣回自己的地址。
+若Bob透過智能合約提出存幣申請，數量為100個，但中央式服務在監聽到存幣申請事件後，在側鏈替Bob寫入的存幣金額為錯誤的90個，試圖造成Bob損失，則當中央式服務試圖提交存幣收據給智能合約驗證時，會向合約提出以下資訊，(serverLtxHash=中央式服務針對lightTxHash的簽章, type=deposit, from=此處送方地址為null, to=Bob地址, value=側鏈存幣金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=存幣編號(DSN), serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=此處送方帳戶餘額為null, toBalance=Bob側鏈存幣後餘額，lightTxHash=keccak256(lightTxData))，此時，智能合約只需要根據存幣收據中的存幣編號，查詢出Bob在智能合約上的存幣申請，並比較兩者value數值是否相同，lightTxHash=keccak256(type||from||to||value||stageHeight||LSN)，以及receiptHash=keccak256(GSN||fromBalance||toBalance || lightTxHash)，以及檢查lightTxHash和serverLtxHash是否通過簽章驗證與receiptHash和serverReceiptHash是否通過簽章驗證，且兩者皆為服務端地址發送，成功後將更改deposited為true，接著才能廣播出**提交收據事件**，故在此處兩者value並不相同，無法通過智能合約驗證，deposited依然為false，除非中央式服務再提出正確金額的收據，否則待depositTimeout時限一到，Bob就能將此次存幣申請，視同無回應，可直接從合約移轉存幣回自己的地址。
 
 ### Withdraw
 #### 提幣無回應攻擊
@@ -768,14 +796,14 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 
 ![](https://i.imgur.com/FDedXvk.png)
 
-若Bob透過智能合約提出提幣申請，數量為100個，但中央式服務在監聽到提幣申請事件後，在側鏈替Bob寫入的提幣金額為錯誤的90個，試圖造成Bob損失，則當中央式服務試圖提交提幣收據給智能合約驗證時，會向合約提出以下資訊，(serverLtxHash=中央式服務針對lightTxHash的簽章, type=withdraw, from=Bob地址, to=此處收方為null, value=側鏈提幣金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=提幣編號(WSN), serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=Bob側鏈提幣後餘額, toBalance=此處收方帳戶餘額為null)，此時，智能合約只需要根據提幣收據中的WSN，查詢出Bob在智能合約上的提幣申請，並比較兩者value數值是否相同，接著根據以下公式從收據資訊中計算lightTxHash=keccak256(type||from||to||value||stageHeight||LSN)，以及receiptHash=keccak256(GSN||fromBalance||toBalance || lightTxHash)，以及檢查lightTxHash和serverLtxHash是否通過簽名驗證與receiptHash和serverReceiptHash是否通過簽名驗證，且兩者皆為服務端地址發送，接著才能廣播出**提交收據事件**，故在此處兩者value並不相同，無法通過智能合約驗證，提幣紀錄中的withdrawed依然為false，除非中央式服務再提出正確金額的收據，否則待withdrawTimeout時限一到，Bob就能直接將此次提幣申請，視同無回應，可直接從合約移轉value個資產回自己的主鏈地址。
+若Bob透過智能合約提出提幣申請，數量為100個，但中央式服務在監聽到提幣申請事件後，在側鏈替Bob寫入的提幣金額為錯誤的90個，試圖造成Bob損失，則當中央式服務試圖提交提幣收據給智能合約驗證時，會向合約提出以下資訊，(serverLtxHash=中央式服務針對lightTxHash的簽章, type=withdraw, from=Bob地址, to=此處收方為null, value=側鏈提幣金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, keccak256(LSN || stageHeight || address)=提幣編號(WSN), serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=Bob側鏈提幣後餘額, toBalance=此處收方帳戶餘額為null)，此時，智能合約只需要根據提幣收據中的WSN，查詢出Bob在智能合約上的提幣申請，並比較兩者value數值是否相同，接著根據以下公式從收據資訊中計算lightTxHash=keccak256(type||from||to||value||stageHeight||LSN)，以及receiptHash=keccak256(GSN||fromBalance||toBalance || lightTxHash)，以及檢查lightTxHash和serverLtxHash是否通過簽章驗證與receiptHash和serverReceiptHash是否通過簽章驗證，且兩者皆為服務端地址發送，接著才能廣播出**提交收據事件**，故在此處兩者value並不相同，無法通過智能合約驗證，提幣紀錄中的withdrawed依然為false，除非中央式服務再提出正確金額的收據，否則待withdrawTimeout時限一到，Bob就能直接將此次提幣申請，視同無回應，可直接從合約移轉value個資產回自己的主鏈地址。
 
 ### Remittance
 #### 中心化服務竄改交易
 
 ![](https://i.imgur.com/Cyrh7Z4.png)
 
-若Bob提出交易申請於側鏈轉移資產到Thief的側鏈地址，數量為50個，但中央式服務在收到交易申請後，在側鏈替Bob寫入的交易金額為錯誤的100個，試圖造成Bob損失，圖利Thief，則中心化服務會在第二步驟竄改交易金額後，於側鏈更新錯誤帳本及餘額，取得錯誤收據後，回傳給Bob，此時Bob收到錯誤收據並於驗證階段時，將會發現該錯誤收據的金額與當時傳給中心化服務並含有Bob簽名的側帳不符，具體內容為(clientLtxHash=Bob對lightTxHash的簽章, serverLtxHash=中央式服務針對lightTxHash的簽章, type=remittance, from=Bob地址, to=Thief地址, value=錯誤金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=Bob側鏈更新餘額, toBalance=Thief側鏈更新餘額，lightTxHash=keccak256(lightTxData))，Bob會發現clientLtxHash與serverLtxHash的簽名內容不一致，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，Bob即可對這筆錯誤收據提出抗議，即便Bob未發現錯誤收據，稽核員在挑戰期也可以代替Bob驗證這筆錯誤收據並提出抗議，取得賠償金。
+若Bob提出交易申請於側鏈轉移資產到Thief的側鏈地址，數量為50個，但中央式服務在收到交易申請後，在側鏈替Bob寫入的交易金額為錯誤的100個，試圖造成Bob損失，圖利Thief，則中心化服務會在第二步驟竄改交易金額後，於側鏈更新錯誤帳本及餘額，取得錯誤收據後，回傳給Bob，此時Bob收到錯誤收據並於驗證階段時，將會發現該錯誤收據的金額與當時傳給中心化服務並含有Bob簽章的側帳不符，具體內容為(clientLtxHash=Bob對lightTxHash的簽章, serverLtxHash=中央式服務針對lightTxHash的簽章, type=remittance, from=Bob地址, to=Thief地址, value=錯誤金額, stageHeight=此側帳將被放置於哪個側鏈階段, LSN=防止雙花攻擊之編號, serverReceiptHash=中央式服務針對receiptHash的簽章, GSN=單一stage中側帳編號, fromBalance=Bob側鏈更新餘額, toBalance=Thief側鏈更新餘額，lightTxHash=keccak256(lightTxData))，Bob會發現clientLtxHash與serverLtxHash的簽章內容不一致，待中央式服務打包側帳為一個新的階段後，開始挑戰期的流程，Bob即可對這筆錯誤收據提出抗議，即便Bob未發現錯誤收據，稽核員在挑戰期也可以代替Bob驗證這筆錯誤收據並提出抗議，取得賠償金。
 
 #### 側鏈交易無回應
 
@@ -806,24 +834,3 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 無窮鏈可以讓每個收視戶稽核自己的付款紀錄，同時讓內容提供商了解結款的情形，並且不需要了解所有人的個資就可以確保交易的完整性，達到資訊對等．
 ## E-Commerce
 電商平台已經是相當完整並成熟的產業之一，現在很多人已經相當習慣使用電商平台來做購買產品；使用無窮鏈的金流側鏈服務即可以快速地使用虛擬貨幣微支付來購買產品，同時也可以讓各個用戶確認自己的帳，這個支付系統即可達到快速、安全、不可篡改．
-## 符號表
-
-```
-t   : light transaciton
-tc  : light transaction  include client signature
-ts  : tc include server signature
-r   : receipt include ts
-rs  : receipt include server signature
-LSN : local sequence number
-GSN : global sequence number
-Si  : stage height i
-Ld  : deposit logs in smart contract
-Lw  : withdraw logs in smart contract
-l   : log in Ld or Lw
-Ad  : address of account
-Ab  : balance of account
-v   : value of tokens or ETH
-Fd  : flag of deposit
-C   : IFC contract
-*function () : contract function
-```
