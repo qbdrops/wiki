@@ -263,8 +263,8 @@ type : type of light transaction
 ### 存幣
 ![](images/deposit.jpg)
 
-#### _客戶端_ 向 _無窮鏈合約_ 申請存幣 (1~2)
-首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
+#### 客戶端向無窮鏈合約申請存幣 (1~2)
+首先， 客戶端向無窮鏈合約查詢 `stageHeight` 並產生 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
 Si   = getLatestStageHeight(C)
@@ -277,7 +277,7 @@ tc   = signLightTx(t)
 // sign the light trnsaction
 ```
 
-接下來， _客戶端_ 呼叫 _無窮鏈合約_ 之 `proposeDeposit` 方法以提出存幣申請，這個方法會在合約新增一筆 `Deposit Log`：
+接下來，客戶端呼叫無窮鏈合約之 `proposeDeposit` 方法以提出存幣申請，這個方法會在合約新增一筆 `Deposit Log`：
 
 ```
 Ld'  = *proposeDeposit(tc)
@@ -293,10 +293,10 @@ Ld   = [l1, l2, ...]
 Ld'  = push(Ld, l)
 ```
 
-存幣申請後， _無窮鏈合約_ 即廣播 `ProposeDeposit` 事件，其中包含 `lightTransaction`。
+存幣申請後，無窮鏈合約即廣播 `ProposeDeposit` 事件，其中包含 `lightTransaction`。
 
-#### _中心化服務_ 監聽申請存幣事件並產生存幣側帳送至 _節點_ (3~5)
-之後， _中心化服務_ 監聽 _無窮鏈合約_ 的 `ProposeDeposit` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則 _中心化服務_ 再對其產生簽章並送至 _節點_ ：
+#### 中心化服務監聽申請存幣事件並產生存幣側帳送至節點 (3~5)
+之後，中心化服務監聽無窮鏈合約的 `ProposeDeposit` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則中心化服務再對其產生簽章並送至節點：
 
 ```
 result = verifyLightTx(tc)
@@ -307,8 +307,8 @@ if (result == true) {
 }
 ```
 
-#### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~8)
-_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
+#### 節點驗證側帳後產生收據並回傳中心化服務 (6~8)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
 
 ```
 result = verifyLightTx(ts)
@@ -321,8 +321,8 @@ if (result == true) {
 }
 ```
 
-#### _中心化服務_ 取得收據並向 _無窮鏈合約_ 執行存幣 (9~13)
-_中心化服務_ 取得 `receipt` 後即對其簽章，接著呼叫合約之 `deposit` 方法以執行存幣：
+#### 中心化服務取得收據並向無窮鏈合約執行存幣 (9~13)
+中心化服務取得 `receipt` 後即對其簽章，接著呼叫合約之 `deposit` 方法以執行存幣：
 
 ```
 rs = signReceipt(r)
@@ -338,10 +338,10 @@ l'   = [Si, LSN, Ad, v, timeout, Fd']
 Fd'  = true
 ```
 
-存幣執行後， _無窮鏈合約_ 即廣播 `Deposit` 事件，其中包含 `receipt`。
+存幣執行後，無窮鏈合約即廣播 `Deposit` 事件，其中包含 `receipt`。
 
-#### _客戶端_ 監聽存幣事件並取得收據 (14~15)
-最後， _客戶端_ 監聽 _無窮鏈合約_ `Deposit` 事件以取得 `receipt` 並儲存：
+#### 客戶端監聽存幣事件並取得收據 (14~15)
+最後，客戶端監聽無窮鏈合約 `Deposit` 事件以取得 `receipt` 並儲存：
 
 ```
 saveReceipt(rs)
@@ -350,8 +350,8 @@ saveReceipt(rs)
 ### 提幣 Withdraw
 ![](images/withdraw.jpg)
 
-#### _客戶端_ 向 _無窮鏈合約_ 申請提幣 (1~2)
-首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
+#### 客戶端向無窮鏈合約申請提幣 (1~2)
+首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
 Si   = getLatestStageHeight(C)
@@ -360,7 +360,7 @@ t    = makeLightTx(Si, LSN, Ad, v, 'withdraw')
 tc   = signLightTx(t)
 ```
 
-接下來， _客戶端_ 呼叫 _無窮鏈合約_ 之 `proposeWithdraw` 方法以提出提幣申請，這個方法會在合約新增一筆 `Withdraw Log`：
+接下來，客戶端呼叫無窮鏈合約之 `proposeWithdraw` 方法以提出提幣申請，這個方法會在合約新增一筆 `Withdraw Log`：
 
 ```
 Lw'  = *proposeWithdraw(tc)
@@ -375,10 +375,10 @@ l    = [Si, LSN, Ad, v, timeout, Fw]
 Fw   = false
 ```
 
-提幣申請後， _無窮鏈合約_ 即廣播 `ProposeWithdraw` 事件，其中包含 `lightTransaction`。
+提幣申請後，無窮鏈合約即廣播 `ProposeWithdraw` 事件，其中包含 `lightTransaction`。
 
-#### _中心化服務_ 監聽申請提幣事件並產生提幣側帳送至 _節點_ (3~5)
-之後， _中心化服務_ 監聽 _無窮鏈合約_ 的 `ProposeWithdraw` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則 _中心化服務_ 再對其產生簽章並送至 _節點_ ：
+#### 中心化服務監聽申請提幣事件並產生提幣側帳送至節點 (3~5)
+之後，中心化服務監聽無窮鏈合約的 `ProposeWithdraw` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則中心化服務再對其產生簽章並送至節點：
 
 ```
 result = verifyLightTx(tc)
@@ -389,8 +389,8 @@ if (result == true) {
 }
 ```
 
-#### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~8)
-_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
+#### 節點驗證側帳後產生收據並回傳中心化服務 (6~8)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務：
 
 ```
 result = verifyLightTx(ts)
@@ -403,28 +403,28 @@ if (result == true) {
 }
 ```
 
-#### _中心化服務_ 取得收據並向 _無窮鏈合約_ 提交收據 (9~13)
-_中心化服務_ 取得 `receipt` 後即對其簽章，接著呼叫合約之 `submitReceipt` 方法以提交收據：
+#### 中心化服務取得收據並向無窮鏈合約提交收據 (9~13)
+中心化服務取得 `receipt` 後即對其簽章，接著呼叫合約之 `submitReceipt` 方法以提交收據：
 
 ```
 rs = signReceipt(r)
 *submitReceipt(rs)
 ```
 
-提交收據後， _無窮鏈合約_ 即廣播 `SubmitReceipt` 事件，其中包含 `receipt`。
+提交收據後，無窮鏈合約即廣播 `SubmitReceipt` 事件，其中包含 `receipt`。
 
-#### _客戶端_ 監聽收據提交事件並取得收據 (14~15)
-最後， _客戶端_ 監聽 _無窮鏈合約_ `SubmitReceipt` 事件以取得 `receipt` 並儲存：
+#### 客戶端監聽收據提交事件並取得收據 (14~15)
+最後，客戶端監聽無窮鏈合約 `SubmitReceipt` 事件以取得 `receipt` 並儲存：
 
 ```
 saveReceipt(rs)
 ```
 
-#### _中心化服務_ 新增側鏈區段並達成最終性 (16)
+#### 中心化服務新增側鏈區段並達成最終性 (16)
 提幣必須經過挑戰期，需經過稽核 / 抗議 / 自清 / 付罰金等流程以達成最終性，其詳細過程會於下一個章節說明。
 
-#### _客戶端_ 向 _無窮鏈合約_ 執行提幣 (17~18)
-最後， _客戶端_ 於最終性達成後即可呼叫 _無窮鏈合約_ `withdraw` 方法以執行提幣：
+#### 客戶端向無窮鏈合約執行提幣 (17~18)
+最後，客戶端於最終性達成後即可呼叫無窮鏈合約 `withdraw` 方法以執行提幣：
 
 ```
 Lw' = *withdraw(rs)
@@ -441,8 +441,8 @@ Fw'  = true
 
 ### 即時提幣
 ![](images/instantWithdraw.jpg)
-#### _客戶端_ 產生即時提幣側帳並送至 _中心化服務_ (1~2)
-首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
+#### 客戶端產生即時提幣側帳並送至中心化服務 (1~2)
+首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
 Si   = getLatestStageHeight(C)
@@ -452,8 +452,8 @@ tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
 
-#### _中心化服務_ 驗證側帳並送至 _節點_ (3~5)
-_中心化服務_ 取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至 _節點_ ：
+#### 中心化服務驗證側帳並送至節點 (3~5)
+中心化服務取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至節點：
 
 ```
 result = verifyLightTx(tc)
@@ -464,8 +464,8 @@ if (result == true) {
 }
 ```
 
-#### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~7)
-_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
+#### 節點驗證側帳後產生收據並回傳中心化服務 (6~7)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務：
 
 ```
 result = verifyLightTx(ts)
@@ -478,23 +478,23 @@ if (result == true) {
 }
 ```
 
-#### _中心化服務_ 取得收據並送至 _客戶端_ (8~9)
-_中心化服務_ 取得 `receipt` 後即對其產生簽章並回傳 _客戶端_ ：
+#### 中心化服務取得收據並送至客戶端 (8~9)
+中心化服務取得 `receipt` 後即對其產生簽章並回傳客戶端 ：
 
 ```
 rs = signReceipt(r)
 return rs
 ```
 
-#### _客戶端_ 取得收據 (10~12)
-接著， _客戶端_ 取得收據後即儲存：
+#### 客戶端取得收據 (10~12)
+接著， 客戶端取得收據後即儲存：
 
 ```
 saveReceipt(rs)
 ```
 
-#### _客戶端_ 執行即時提幣 (14~15)
-最後， _客戶端_ 呼叫 `instantWithdraw` 方法以執行即時提幣：
+#### 客戶端執行即時提幣 (14~15)
+最後，客戶端呼叫 `instantWithdraw` 方法以執行即時提幣：
 
 ```
 Lw' = *instantWithdraw(rs)
@@ -512,8 +512,8 @@ Fw   = true
 ### 轉帳 Remittance
 ![](images/remittance.jpg)
 
-#### _客戶端_ 產生轉帳側帳並送至 _中心化服務_ (1~2)
-首先， _客戶端_ 向 _無窮鏈合約_ 查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
+#### 客戶端產生轉帳側帳並送至中心化服務 (1~2)
+首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
 Si   = getLatestStageHeight(C)
@@ -523,8 +523,8 @@ tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
 
-#### _中心化服務_ 驗證側帳並送至 _節點_ (3~5)
-_中心化服務_ 取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至 _節點_ ：
+#### 中心化服務驗證側帳並送至節點 (3~5)
+中心化服務取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至節點：
 
 ```
 result = verifyLightTx(tc)
@@ -535,8 +535,8 @@ if (result == true) {
 }
 ```
 
-#### _節點_ 驗證側帳後產生收據並回傳 _中心化服務_ (6~7)
-_節點_ 取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳 _中心化服務_ ：
+#### 節點驗證側帳後產生收據並回傳中心化服務 (6~7)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務：
 
 ```
 result = verifyLightTx(ts)
@@ -549,46 +549,59 @@ if (result == true) {
 }
 ```
 
-#### _中心化服務_ 取得收據並送至 _客戶端_ (8~9)
-_中心化服務_ 取得 `receipt` 後即對其產生簽章並回傳 _客戶端_ ：
+#### 中心化服務取得收據並送至客戶端 (8~9)
+中心化服務取得 `receipt` 後即對其產生簽章並回傳客戶端：
 
 ```
 rs = signReceipt(r)
 return rs
 ```
 
-#### _客戶端_ 取得收據 (10~12)
-最後， _客戶端_ 取得收據後即儲存：
+#### 客戶端取得收據 (10~12)
+最後，客戶端取得收據後即儲存：
 
 ```
 saveReceipt(rs)
 ```
 
-### 稽核與抗議 Auditing and Challenge
+### 分散式稽核 Distributed Auditing
 ![](images/challenge.jpg)
+
+以上為分散式稽核**客戶端提出抗議**且**中心化服務自清失敗**的時序圖。其等同於下列流程：
+
 ![](images/flow.jpg)
 
-#### _中心化服務_ 新增側鏈區段 (1~4)
-`commitStage`
-密碼學證據
-receipt tree rootHash
-balance tree rootHash
-完整性證明
-tree building
-indexed merkle tree
+其中包括 `attach` `audit` `challenge` `defend` `compensate` `finalize` 等行為。
 
-#### _客戶端_ 監聽抗議事件新增區段事件，收到事件後可進行稽核 (5~15)
+呼叫 `attach` 後無窮鏈合約將廣播 `Attach` 事件，這同時也揭示了**客戶端-中心化服務-稽核員賽局**的開始。這些角色之間能夠互相制衡以維持側鏈之正確性：客戶端可以呼叫 `challenge` 方法向合約提出抗議，而中心化服務端也能呼叫 `defend` 方法解除抗議。最後，所有的 `Stage` 都必須透過 `finalize` 達成最終性才能再新增下一個 `Stage`。
+
+以下將針對不同行為進行說明。
+
+#### 中心化服務新增側鏈區段 (1~4)
+中心化服務呼叫 `attach` 方法
+節點計算 `rootHash`
+節點呼叫合約 `attach` 方法
+
+```
+res = attach()
+```
+```
+Rh = buildStage(Rs)
+*attach(Rh)
+```
+
+#### 客戶端進行稽核 (5~15)
 ![](images/audit.jpg)
 
-#### _客戶端_ 於稽核失敗時可提出抗議 (5~15)
+#### 客戶端提出抗議 (5~15)
 ![](images/period.jpg)
 
-#### _中心化服務_ 監聽抗議事件，收到抗議後可進行自清 (16)
+#### 中心化服務進行自清 (16)
 ![](images/defend.jpg)
 
-#### _中心化服務_ 於自清失敗後須支付罰款 (17)
+#### 中心化服務支付賠款 (17)
 
-#### _中心化服務_ 於所有抗議皆被處理後可達成側鏈之最終性 (18)
+#### 中心化服務達成最終性 (18)
 
 ## 安全性分析
 
