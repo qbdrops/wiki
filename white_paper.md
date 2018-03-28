@@ -46,6 +46,7 @@
     - 金融服務
     - Streaming Service
     - E-Commerce
+- 附錄A
 
 # 簡介 Introduction
 ## 區塊鏈的挑戰
@@ -805,3 +806,24 @@ Balance記載著每位側鏈參與方在同個階段中帳戶的餘額，所有�
 無窮鏈可以讓每個收視戶稽核自己的付款紀錄，同時讓內容提供商了解結款的情形，並且不需要了解所有人的個資就可以確保交易的完整性，達到資訊對等．
 ## E-Commerce
 電商平台已經是相當完整並成熟的產業之一，現在很多人已經相當習慣使用電商平台來做購買產品；使用無窮鏈的金流側鏈服務即可以快速地使用虛擬貨幣微支付來購買產品，同時也可以讓各個用戶確認自己的帳，這個支付系統即可達到快速、安全、不可篡改．
+## 符號表
+
+```
+t   : light transaciton
+tc  : light transaction  include client signature
+ts  : tc include server signature
+r   : receipt include ts
+rs  : receipt include server signature
+LSN : local sequence number
+GSN : global sequence number
+Si  : stage height i
+Ld  : deposit logs in smart contract
+Lw  : withdraw logs in smart contract
+l   : log in Ld or Lw
+Ad  : address of account
+Ab  : balance of account
+v   : value of tokens or ETH
+Fd  : flag of deposit
+C   : IFC contract
+*function () : contract function
+```
