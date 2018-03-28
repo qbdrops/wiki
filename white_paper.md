@@ -10,7 +10,7 @@
     - 角色 Roles
         - 中心化服務 Central service
         - 客戶端 Client
-        - 稽核員 Auditer
+        - 稽核員 Auditor
         - 去中心化儲存媒體 Decentralized Storage
         - 無窮鏈合約 Infinitechain Contract
     - 資料模型 Data Model
@@ -93,7 +93,7 @@
 客戶端是指結合了無窮鏈之客戶端軟體開發套件(Infinitechain client SDK)，能為客戶提供與中心化服務介接的應用程式。
 可能的客戶端包括了網頁瀏覽器(Web browser)、手機應用程式(Moblie app)等。
 
-### 稽核員 Auditer
+### 稽核員 Auditor
 
 稽核員是無窮鏈網路中負責維護側鏈安全與穩定的執法者，確保任何側鏈不會因中心化服務之共謀或錯帳，導致客戶端實質上的損失。
 稽核員可以是無窮鏈網路上的任意一個節點、客戶甚至是其他中心化服務，意味著任何人都可以對任意一條無窮鏈側鏈進行稽核。
@@ -531,7 +531,7 @@ saveReceipt(rs)
 ```
 
 ### 稽核與抗議 Auditing and objection
-![](images/objection.jpg)
+![](images/challenge.jpg)
 ![](images/flow.jpg)
 
 #### _中心化服務_ 新增側鏈區段 (1~4)
