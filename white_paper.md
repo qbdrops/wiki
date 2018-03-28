@@ -25,7 +25,7 @@
         - 提幣 Withdraw
         - 即時提幣 Instant Withdraw
         - 轉帳 Remittance
-        - 分散式稽核
+        - 稽核與抗議 Auditing & Challenge
     - 側鏈的經濟威脅與經濟激勵
         - 經濟威脅：如安全性分析的幾種抗議
         - 經濟激勵：若如實維護側鏈，則可得到利他點數，有利於更高機會取得區塊獎勵
@@ -530,7 +530,7 @@ return rs
 saveReceipt(rs)
 ```
 
-### 稽核與抗議 Auditing and objection
+### 稽核與抗議 Auditing and Challenge
 ![](images/challenge.jpg)
 ![](images/flow.jpg)
 
@@ -550,7 +550,7 @@ indexed merkle tree
 ![](images/period.jpg)
 
 #### _中心化服務_ 監聽抗議事件，收到抗議後可進行自清 (16)
-![](images/exonerate.jpg)
+![](images/defend.jpg)
 
 #### _中心化服務_ 於自清失敗後須支付罰款 (17)
 
