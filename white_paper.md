@@ -257,6 +257,11 @@ v   : value of assets
 Fd  : boolean of deposit flag
 Fw  : boolean of withdraw flag
 C   : Infinitechain contract
+getLatestStageHeight(C) : get the latest stage height in infinitechain contract
+getLSN(Ad) : produce the random LSN
+type : type of light transaction 
+makeLightTx(Si, LSN, Ad, v, 'type') : make light transaction format
+signLightTx(t) : sign the light transaction
 ```
 
 ### 存幣
