@@ -234,32 +234,6 @@ receipt = {
 同樣為索引莫克樹之資料結構，在側鏈協定裡，是中心化服務用來紀錄側鏈中所有客戶端之餘額，當中心化服務收到側帳產生對應之收據同時，會根據每筆收據動態更新餘額樹中客戶端之餘額。
 
 ## 協定 Protocol
-
-在描述協定前我們先定義一下常用到的符號：
-
-### 符號表
-
-```
-t   : light transaciton
-tc  : light transaction  include client signature
-ts  : tc include server signature
-r   : receipt include ts
-rs  : receipt include server signature
-LSN : local sequence number
-GSN : global sequence number
-Si  : stage height i
-Ld  : a set of deposit logs in smart contract
-Lw  : a set of withdraw logs in smart contract
-l   : log in Ld or Lw
-Ad  : address of account
-Ab  : balance of account
-v   : value of assets
-Fd  : boolean of deposit flag
-Fw  : boolean of withdraw flag
-C   : Infinitechain contract
-type : type of light transaction 
-```
-
 ### 存幣
 ![](images/deposit.jpg)
 
@@ -267,30 +241,25 @@ type : type of light transaction
 首先， 客戶端向無窮鏈合約查詢 `stageHeight` 並產生 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
-Si   = getLatestStageHeight(C)
-// get the latest stage height in infinitechain contract
-LSN  = getLSN(Ad)
-// produce the random LSN
-t    = makeLightTx(Si, LSN, Ad, v, 'deposit')
-// make a light transaction
+sn_i = getLatestStageHeight(I)
+LSN  = getLSN(ai_a)
+t    = makeLightTx(sn_i, LSN, ai_a, v, 'deposit')
 tc   = signLightTx(t)
-// sign the light trnsaction
 ```
 
 接下來，客戶端呼叫無窮鏈合約之 `proposeDeposit` 方法以提出存幣申請，這個方法會在合約新增一筆 `Deposit Log`：
 
 ```
-Ld'  = *proposeDeposit(tc)
-// propose a deposit log
+Ld'  = *proposeDeposit(Ld, tc)
 ```
 
 其中
 
 ```
-l    = [Si, LSN, Ad, v, timeout, Fd]
-Fd   = false
-Ld   = [l1, l2, ...]
-Ld'  = push(Ld, l)
+ld   = [sn_i, LSN, ai_a, v, timeout, fd]
+fd   = false
+Ld   = [ld1, ld2, ...]
+Ld'  = push(Ld, ld)
 ```
 
 存幣申請後，無窮鏈合約即廣播 `ProposeDeposit` 事件，其中包含 `lightTransaction`。
@@ -314,9 +283,9 @@ if (result == true) {
 result = verifyLightTx(ts)
 
 if (result == true) {
-  r = makeReceipt(ts)
-  updateBalance(r)
-  saveReceipt(r)
+  r     = makeReceipt(ts)
+  B'    = updateBalance(B, r)
+  Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
@@ -325,17 +294,17 @@ if (result == true) {
 中心化服務取得 `receipt` 後即對其簽章，接著呼叫合約之 `deposit` 方法以執行存幣：
 
 ```
-rs = signReceipt(r)
+rs  = signReceipt(r)
 Ld' = *deposit(rs)
 ```
 
 其中
 
 ```
-Ld   = [l1, l2, ..., l]
-Ld'  = [l1, l2, ..., l']
-l'   = [Si, LSN, Ad, v, timeout, Fd']
-Fd'  = true
+Ld   = [ld1, ld2, ..., ld]
+Ld'  = [ld1, ld2, ..., ld']
+ld'  = [sn_i, LSN, ai_a, v, timeout, fd']
+fd'  = true
 ```
 
 存幣執行後，無窮鏈合約即廣播 `Deposit` 事件，其中包含 `receipt`。
@@ -344,7 +313,7 @@ Fd'  = true
 最後，客戶端監聽無窮鏈合約 `Deposit` 事件以取得 `receipt` 並儲存：
 
 ```
-saveReceipt(rs)
+Ri_c' = saveReceipt(Ri_c, rs)
 ```
 
 ### 提幣 Withdraw
@@ -354,25 +323,25 @@ saveReceipt(rs)
 首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
-Si   = getLatestStageHeight(C)
-LSN  = getLSN(Ad)
-t    = makeLightTx(Si, LSN, Ad, v, 'withdraw')
+sn_i = getLatestStageHeight(I)
+LSN  = getLSN(ai_a)
+t    = makeLightTx(sn_i, LSN, ai_a, v, 'withdraw')
 tc   = signLightTx(t)
 ```
 
 接下來，客戶端呼叫無窮鏈合約之 `proposeWithdraw` 方法以提出提幣申請，這個方法會在合約新增一筆 `Withdraw Log`：
 
 ```
-Lw'  = *proposeWithdraw(tc)
+Lw'  = *proposeWithdraw(Lw, tc)
 ```
 
 其中
 
 ```
-Lw   = [l1, l2, ...]
-Lw'  = push(Lw, l)
-l    = [Si, LSN, Ad, v, timeout, Fw]
-Fw   = false
+Lw   = [lw1, lw2, ...]
+Lw'  = push(Lw, lw)
+lw   = [sn_i, LSN, ai_a, v, timeout, fw]
+fw   = false
 ```
 
 提幣申請後，無窮鏈合約即廣播 `ProposeWithdraw` 事件，其中包含 `lightTransaction`。
@@ -396,9 +365,9 @@ if (result == true) {
 result = verifyLightTx(ts)
 
 if (result == true) {
-  r = makeReceipt(ts)
-  updateBalance(r)
-  saveReceipt(r)
+  r     = makeReceipt(ts)
+  B'    = updateBalance(B, r)
+  Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
@@ -408,7 +377,7 @@ if (result == true) {
 
 ```
 rs = signReceipt(r)
-*submitReceipt(rs)
+*submitReceipt(Lw, rs)
 ```
 
 提交收據後，無窮鏈合約即廣播 `SubmitReceipt` 事件，其中包含 `receipt`。
@@ -417,7 +386,7 @@ rs = signReceipt(r)
 最後，客戶端監聽無窮鏈合約 `SubmitReceipt` 事件以取得 `receipt` 並儲存：
 
 ```
-saveReceipt(rs)
+Ri_c' = saveReceipt(Ri_c, rs)
 ```
 
 #### 中心化服務新增側鏈區段並達成最終性 (16)
@@ -427,16 +396,16 @@ saveReceipt(rs)
 最後，客戶端於最終性達成後即可呼叫無窮鏈合約 `withdraw` 方法以執行提幣：
 
 ```
-Lw' = *withdraw(rs)
+Lw' = *withdraw(Lw, rs)
 ```
 
 其中
 
 ```
-Lw   = [l1, l2, ..., l]
-Lw'  = [l1, l2, ..., l']
-l'   = [Si, LSN, Ad, v, timeout, Fw']
-Fw'  = true
+Lw  = [lw1, lw2, ..., lw]
+Lw' = [lw1, lw2, ..., lw']
+lw' = [sn_i, LSN, ai_a, v, timeout, fw']
+fw' = true
 ```
 
 ### 即時提幣
@@ -445,9 +414,9 @@ Fw'  = true
 首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
-Si   = getLatestStageHeight(C)
-LSN  = getLSN(Ad)
-t    = makeLightTx(Si, LSN, v, Ad, 'instanctWithdraw')
+sn_i = getLatestStageHeight(I)
+LSN  = getLSN(ai_a)
+t    = makeLightTx(sn_i, LSN, v, ai_a, 'instanctWithdraw')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
@@ -471,9 +440,9 @@ if (result == true) {
 result = verifyLightTx(ts)
 
 if (result == true) {
-  r = makeReceipt(ts)
-  updateBalance(r)
-  saveReceipt(r)
+  r     = makeReceipt(ts)
+  B'    = updateBalance(B, r)
+  Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
@@ -490,14 +459,14 @@ return rs
 接著， 客戶端取得收據後即儲存：
 
 ```
-saveReceipt(rs)
+Ri_c' = saveReceipt(Ri_c, rs)
 ```
 
 #### 客戶端執行即時提幣 (14~15)
 最後，客戶端呼叫 `instantWithdraw` 方法以執行即時提幣：
 
 ```
-Lw' = *instantWithdraw(rs)
+Lw' = *instantWithdraw(Lw, rs)
 ```
 
 其中
@@ -505,7 +474,7 @@ Lw' = *instantWithdraw(rs)
 ```
 Lw   = [l1, l2, ...]
 Lw'  = push(Lw, l)
-l    = [Si, LSN, Ad, v, timeout, Fw]
+l    = [sn_i, LSN, ai_a, v, timeout, Fw]
 Fw   = true
 ```
 
@@ -516,9 +485,9 @@ Fw   = true
 首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
 
 ```
-Si   = getLatestStageHeight(C)
-LSN  = getLSN(Ad)
-t    = makeLightTx(Si, LSN, v, Ad, 'remittance')
+sn_i = getLatestStageHeight(I)
+LSN  = getLSN(ai_a)
+t    = makeLightTx(sn_i, LSN, v, ai_a, 'remittance')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
@@ -542,9 +511,9 @@ if (result == true) {
 result = verifyLightTx(ts)
 
 if (result == true) {
-  r = makeReceipt(ts)
-  updateBalance(r)
-  saveReceipt(r)
+  r     = makeReceipt(ts)
+  B'    = updateBalance(B, r)
+  Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
@@ -561,7 +530,7 @@ return rs
 最後，客戶端取得收據後即儲存：
 
 ```
-saveReceipt(rs)
+Ri_c' = saveReceipt(Ri_c, rs)
 ```
 
 ### 分散式稽核 Distributed Auditing
@@ -573,35 +542,108 @@ saveReceipt(rs)
 
 其中包括 `attach` `audit` `challenge` `defend` `compensate` `finalize` 等行為。
 
-呼叫 `attach` 後無窮鏈合約將廣播 `Attach` 事件，這同時也揭示了**客戶端-中心化服務-稽核員賽局**的開始。這些角色之間能夠互相制衡以維持側鏈之正確性：客戶端可以呼叫 `challenge` 方法向合約提出抗議，而中心化服務端也能呼叫 `defend` 方法解除抗議。最後，所有的 `Stage` 都必須透過 `finalize` 達成最終性才能再新增下一個 `Stage`。
+呼叫 `attach` 後無窮鏈合約將廣播 `Attach` 事件，這同時也揭示了**客戶端-中心化服務-稽核員賽局**的開始。這些角色之間能夠互相制衡以確保側鏈之正確性：客戶端可以呼叫 `challenge` 方法向合約提出抗議，而中心化服務端也能呼叫 `defend` 方法解除抗議。最後，所有的 `Stage` 都必須透過呼叫 `finalize` 達成最終性後才能再新增下一個 `Stage`。
 
 以下將針對不同行為進行說明。
 
 #### 中心化服務新增側鏈區段 (1~4)
-中心化服務呼叫 `attach` 方法
-節點計算 `rootHash`
-節點呼叫合約 `attach` 方法
+首先，中心化服務呼叫 `getRootHash` 方法向節點索取 `receipt rootHash` 及 `balance rootHash`：
 
 ```
-res = attach()
-```
-```
-Rh = buildStage(Rs)
-*attach(Rh)
+[Ri_h, Bi_h] = getRootHash(Ri)
 ```
 
-#### 客戶端進行稽核 (5~15)
+接著，中心化服務呼叫合約 `*attach` 方法以將新 `stage` 放至無窮鏈合約：
+
+```
+S'  = *attach(S, Ri_h, Bi_h)
+si  = [Ri_h, Bi_h, n, fn, Lc, Lw, Ld]
+S   = [s1, s2, s3, ...]
+S'  = [s1, s2, s3, ..., si]
+
+*Attach(Ri_h)
+```
+
+#### 客戶端進行稽核，稽核失敗則提出抗議 (5~15)
 ![](images/audit.jpg)
 
-#### 客戶端提出抗議 (5~15)
+客戶端監聽 `Attach` 事件後即開始執行 `audit`，詳細稽核方法如上圖所示，有5種情形會導致稽核失敗，而客戶端可以在**挑戰期**內為每一種失敗情形發起 `challenge`：
+
+挑戰期的示意圖如下：
+
 ![](images/period.jpg)
+
+```
+Ri.each {
+  result = audit(rm, rn)
+  if ((result != ture) && *isInChallengePeriod(sl)) {
+    Lc' = *challenge(Lc, rm, rn, result)
+  }
+}
+
+Lc = [lc1, lc2, ...]
+lc = [rn, ai_a, fc, fp, 'type1']
+Lc' = push(Lc, lc)
+
+*Challenge(sn_i, GSN, ai_a)
+```
+
+`challenge` 行為是多方賽局的第一個要素。
 
 #### 中心化服務進行自清 (16)
 ![](images/defend.jpg)
 
+中心化服務監聽 `Challenge` 事件後即開始執行 `defend` 以針對不合理的 `challenge` 進行自清：
+
+```
+Lc' = *defend(Lc, rm, rn)
+Lc' = [lc1, lc2, ..., lc']
+lc' = [rn, ai_a, fc', fp, 'type1']
+```
+
+其中
+
+```
+if (*audit(rm, rn)) {
+  fc' = ture
+}
+```
+
+`defend` 行為是多方賽局的第二個要素。
+
 #### 中心化服務支付賠款 (17)
 
+中心化服務若執行 `defend` 失敗，則必須支付相對應的罰款予客戶端或者稽核員：
+
+```
+Lc' = *compensate(Lc, lc)
+Lc' = [lc1, lc2, ..., lc']
+lc' = [rn, ai_a, fc, fp', 'type1']
+```
+
+其中
+
+```
+if (*transfer(p)) {
+  fp' = true
+}
+```
+
 #### 中心化服務達成最終性 (18)
+最後，中心化服務可於處理完所有 `challenge` 並經過挑戰期後執行 `finalize`：
+
+```
+s' = *finalize(s)
+s' = [Ri_h, Bi_h, n, fn', Lc, Lw, Ld]
+```
+
+其中
+
+```
+if (*isSettled(sl) && !*isInChallengePeriod(s)) {
+  fn' = true
+}
+```
 
 ## 安全性分析
 
