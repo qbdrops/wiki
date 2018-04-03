@@ -1,3 +1,4 @@
+# Variables
 | Symbol | Description |
 | :--- | :--- |
 | `I` | Infinitechain contract |
@@ -39,14 +40,39 @@
 | `v` | Value of assets |
 | `p` | Challenge penalty |
 
-| Function | Description |
+# SDK Functions
+| Symbol | Description |
 | :--- | :--- |
 | `makeLightTx` |
 | `signLightTx` |
 | `makeReceipt` |
+| `signReceipt` |
+| `verifyLightTx` |
+| `verifyReceipt` |
+| `saveReceipt` |
+| `sendLightTx` |
+| `getRootHash` |
 | `audit` |
-| `*Audit` | Broadcast `Audit` event with `Ri_h` |
+| `attach` |
+| `challenge` |
+| `defend` |
+| `compensate` |
+| `finalize` |
+
+# Contract Functions
+| Symbol | Description |
+| :--- | :--- |
+| `*audit` |
+| `*Audit` |
+| `*attach` |
+| `*Attach` |
 | `*challenge` |
-| `*Challenge` | Broadcast `Challenge` event with `sn_i` `GSN` `ai_a` |
+| `*Challenge` |
+| `*defend` |
+| `*Defend` |
+| `*compensate` |
+| `*Compensate` |
+| `*finalize` |
+| `*Finalize` |
 | `*isSettled` |
 | `*isInChallengePeroid` |
