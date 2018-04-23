@@ -1,4 +1,4 @@
-# Infinitechain 金流側鏈白皮書
+# Infinitechain 金流側鏈黃皮書
 
 ---
 
