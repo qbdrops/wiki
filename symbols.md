@@ -1,7 +1,7 @@
 # Variables
 | Symbol | Description |
 | :--- | :--- |
-| `I` | Infinitechain contract |
+| `C` | BOLT contract |
 | `S` | `stage` set |
 | `s` | `stage` |
 | `sl` | The latest `stage` |
@@ -39,6 +39,7 @@
 | `DSN` | Deposit sequence number |
 | `v` | Value of assets |
 | `p` | Challenge penalty |
+| `v_i` | Limit of the value for `instantWithdrawal` |
 
 # SDK Functions
 | Symbol | Description |
@@ -49,6 +50,7 @@
 | `signReceipt` |
 | `verifyLightTx` |
 | `verifyReceipt` |
+| `type` | Returns `deposit` / `withdrawal` / `instantWithdrawal` / `remittance` |
 | `saveReceipt` |
 | `sendLightTx` |
 | `getRootHash` |

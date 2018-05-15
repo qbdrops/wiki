@@ -112,15 +112,13 @@
 側帳是側鏈不包含買賣雙方交易餘額之交易內容，其中：
 
     1. lightTxHash : lightTxData 運算產生之雜湊值
-    2. type : 側鏈交易型態，可分為deposit, withdraw, remittance, instant withdraw
-    3. from : 交易送方之地址
-    4. to : 交易收方之地址
-    5. value : 交易金額
-    6. fee : 手續費
-    7. LSN : 全名為 Local Sequence Number，是客戶端每筆交易之亂數編號
-    8. stageHeight : 側鏈區段高度
-    9. clientLtxSignature : 客戶端對 lightTxHash 簽章之結果
-    10. serverLtxSignature : 中心化服務對 lightTxHash 簽章之結果
+    2. from : 交易送方之地址
+    3. to : 交易收方之地址
+    4. value : 交易金額
+    5. fee : 手續費
+    6. LSN : 全名為 Local Sequence Number，是客戶端每筆交易之亂數編號
+    7. SigClientLightTx : 客戶端對 lightTxHash 簽章之結果
+    8. SigServerLightTx : 中心化服務對 lightTxHash 簽章之結果
 
 完整資料格式可分為以下四種:
 
@@ -129,45 +127,44 @@
 - Withdraw
 - Instant withdraw
 
-底下是一個`lightTransaction`的JSON格式，我們簡稱為`lightTx`，其中type會根據交易型態而更動，以remittance為例：
+底下是一個 `lightTransaction` 的JSON格式，我們簡稱為`lightTx`，以 `remittance為` 例：
 
 ```
 lightTx = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
+    lightTxHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
     lightTxData: {
-        type: 'remittance',
         from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
         to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
         value: 100,
         fee: 5,
-        LSN: 2,
-        stageHeight: 1
+        LSN: 2
     },
-    sig:{
-        clientLtxSignature:{
+    sig: {
+        clientLightTx: {
             v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+            r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         },
-        serverLtxSignature:{
+        serverLightTx: {
             v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+            r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         }
     }
 }
 ```
 
-接下來在`協定`的章節中，light transaction將會以符號表中的`t`為代稱。
+接下來在 `協定` 的章節中， `light transaction` 將會以符號表中的 `t` 為代稱。
 
 ### 收據 Receipt
 收據為側鏈包含買賣雙方交易餘額之交易內容，其中:
 
     1. receiptHash : receiptData 運算產生之雜湊值
+    2. stageHeight: 區段高度
     2. GSN : 全名為 Global Sequence Number，是側鏈中某階段所有客戶端交易之順序編號
     3. fromBalance : 交易送方之餘額
     4. toBalance : 交易收方之餘額
-    5. serverReceiptSignature : 中心化服務對 receiptHash 簽章之結果
+    5. SigServerReceipt: 中心化服務對 receiptHash 簽章之結果
 
 完整資料格式可分為以下四種:
 - Deposit
@@ -175,49 +172,48 @@ lightTx = {
 - Withdraw
 - Instant withdraw
 
-底下是一個`receipt`的JSON格式，其中type會根據交易型態而更動，以remittance為例：
+底下是一個 `receipt` 的JSON格式，以 `remittance` 為例：
 
 ```
 receipt = {
-    lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
-    receiptHash:'73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
+    lightTxHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+    receiptHash: '73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
     lightTxData: {
-        type: 'remittance',
         from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
         to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
         value: 100,
         fee: 5,
-        LSN: 2,
-        stageHeight: 1
+        LSN: 2
     },
     receiptData: {
+        stageHeight: 1,
         GSN: 21,
-        lightTxHash:'6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
+        lightTxHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
         fromBalance: 50,
         toBalance: 500
     },
     
     sig:{
-        clientLtxSignature:{
+        clientLightTx: {
             v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+            r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         },
-        serverLtxSignature:{
+        serverLightTx: {
             v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+            r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         },
-        serverReceiptSignature:{
+        serverReceipt: {
             v: 28,
-            r:'0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
-            s:'0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+            r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
+            s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         }
     }
 }
 ```
 
-接下來在`協定`的章節中，receipt將會以符號表中的`r`為代稱。
+接下來在 `協定` 的章節中， `receipt` 將會以符號表中的 `r` 為代稱。
 
 ### 索引莫克樹 Indexed Merkle Tree
 
@@ -290,7 +286,7 @@ if (result == true) {
 }
 ```
 
-#### 中心化服務取得收據項後向BOLT合約執行存幣並將收據送至客戶端 (13~16, 19~20)
+#### 中心化服務取得收據後向BOLT合約執行存幣並將收據送至客戶端 (13~16, 19~20)
 中心化服務取得 `receipt` 後即對其產生簽章：
 
 ```
@@ -330,104 +326,13 @@ Ri_c' = saveReceipt(Ri_c, rs)
 ### 提幣 Withdraw
 ![](images/withdraw.jpg)
 
-#### 客戶端向無窮鏈合約申請提幣 (1~2)
-首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
+#### 客戶端產生提幣側帳送至中心化服務 (1~2)
+首先，客戶端產生 `lightTransaction` 並對其簽章：
 
 ```
 sn_i = getLatestStageHeight(I)
 LSN  = getLSN(ai_a)
 t    = makeLightTx(sn_i, LSN, ai_a, v, 'withdraw')
-tc   = signLightTx(t)
-```
-
-接下來，客戶端呼叫無窮鏈合約之 `proposeWithdraw` 方法以提出提幣申請，這個方法會在合約新增一筆 `Withdraw Log`：
-
-```
-Lw'  = *proposeWithdraw(Lw, tc)
-```
-
-其中
-
-```
-Lw   = [lw1, lw2, ...]
-Lw'  = push(Lw, lw)
-lw   = [sn_i, LSN, ai_a, v, timeout, fw]
-fw   = false
-```
-
-提幣申請後，無窮鏈合約即廣播 `ProposeWithdraw` 事件，其中包含 `lightTransaction`。
-
-#### 中心化服務監聽申請提幣事件並產生提幣側帳送至節點 (3~5)
-之後，中心化服務監聽無窮鏈合約的 `ProposeWithdraw` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則中心化服務再對其產生簽章並送至節點：
-
-```
-result = verifyLightTx(tc)
-
-if (result == true) {
-  ts = signLightTx(tc)
-  r = sendLightTx(ts, NodeURL)
-}
-```
-
-#### 節點驗證側帳後產生收據並回傳中心化服務 (6~8)
-節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務：
-
-```
-result = verifyLightTx(ts)
-
-if (result == true) {
-  r     = makeReceipt(ts)
-  B'    = updateBalance(B, r)
-  Ri_s' = saveReceipt(Ri_s, r)
-  return r
-}
-```
-
-#### 中心化服務取得收據並向無窮鏈合約提交收據 (9~13)
-中心化服務取得 `receipt` 後即對其簽章，接著呼叫合約之 `submitReceipt` 方法以提交收據：
-
-```
-rs = signReceipt(r)
-*submitReceipt(Lw, rs)
-```
-
-提交收據後，無窮鏈合約即廣播 `SubmitReceipt` 事件，其中包含 `receipt`。
-
-#### 客戶端監聽收據提交事件並取得收據 (14~15)
-最後，客戶端監聽無窮鏈合約 `SubmitReceipt` 事件以取得 `receipt` 並儲存：
-
-```
-Ri_c' = saveReceipt(Ri_c, rs)
-```
-
-#### 中心化服務新增側鏈區段並達成最終性 (16)
-提幣必須經過挑戰期，需經過稽核 / 抗議 / 自清 / 付罰金等流程以達成最終性，其詳細過程會於下一個章節說明。
-
-#### 客戶端向無窮鏈合約執行提幣 (17~18)
-最後，客戶端於最終性達成後即可呼叫無窮鏈合約 `withdraw` 方法以執行提幣：
-
-```
-Lw' = *withdraw(Lw, rs)
-```
-
-其中
-
-```
-Lw  = [lw1, lw2, ..., lw]
-Lw' = [lw1, lw2, ..., lw']
-lw' = [sn_i, LSN, ai_a, v, timeout, fw']
-fw' = true
-```
-
-### 即時提幣
-![](images/instantWithdraw.jpg)
-#### 客戶端產生即時提幣側帳並送至中心化服務 (1~2)
-首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
-
-```
-sn_i = getLatestStageHeight(I)
-LSN  = getLSN(ai_a)
-t    = makeLightTx(sn_i, LSN, v, ai_a, 'instanctWithdraw')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
@@ -444,49 +349,153 @@ if (result == true) {
 }
 ```
 
-#### 節點驗證側帳後產生收據並回傳中心化服務 (6~7)
-節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務：
+#### 節點驗證側帳後產生收據並回傳中心化服務 (6~9)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Account Set` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
 
 ```
 result = verifyLightTx(ts)
 
 if (result == true) {
   r     = makeReceipt(ts)
-  B'    = updateBalance(B, r)
+  A'    = updateAccount(A, r)
   Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
 
-#### 中心化服務取得收據並送至客戶端 (8~9)
-中心化服務取得 `receipt` 後即對其產生簽章並回傳客戶端 ：
+#### 中心化服務取得收據後向BOLT合約申請提幣並將收據送至客戶端 (10~13, 16~17)
+中心化服務取得 `receipt` 後即對其產生簽章：
 
 ```
 rs = signReceipt(r)
-return rs
 ```
 
-#### 客戶端取得收據 (10~12)
-接著， 客戶端取得收據後即儲存：
+若提幣額度大於 `v_i`，則中心化服務必須呼叫BOLT合約之 `*proposeWithdrawal` 方法以申請提幣：
 
 ```
-Ri_c' = saveReceipt(Ri_c, rs)
-```
-
-#### 客戶端執行即時提幣 (14~15)
-最後，客戶端呼叫 `instantWithdraw` 方法以執行即時提幣：
-
-```
-Lw' = *instantWithdraw(Lw, rs)
+Lw'  = *proposeWithdrawal(Lw)
 ```
 
 其中
 
 ```
-Lw   = [l1, l2, ...]
-Lw'  = push(Lw, l)
-l    = [sn_i, LSN, ai_a, v, timeout, Fw]
-Fw   = true
+lw   = [DSN, sn_i, ai_a, v, timeout, fw]
+fw   = false
+Lw   = [lw1, lw2, ...]
+Lw'  = push(Lw, lw)
+```
+
+中心化服務待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
+
+```
+return rs
+```
+
+申請提幣執行後，BOLT合約即廣播 `proposeWithdrawal` 事件。
+
+#### 客戶端取得收據 (14~15)
+最後，客戶端取得收據後即儲存：
+
+```
+Ri_c' = saveReceipt(Ri_c, rs)
+```
+
+#### 中心化服務新增側鏈區段並達成最終性 (18)
+若提幣額度大於 `v_i` 則必須經過挑戰期，需經過稽核 / 抗議 / 自清 / 付罰金等流程以達成最終性，其詳細過程會於下一個章節說明。
+
+#### 客戶端向無窮鏈合約執行提幣 (19~20)
+最後，客戶端於最終性達成後即可呼叫BOLT合約 `withdraw` 方法以執行提幣：
+
+```
+Lw' = *withdraw(Lw, rs)
+```
+
+其中
+
+```
+Lw  = [lw1, lw2, ..., lw]
+Lw' = [lw1, lw2, ..., lw']
+lw' = [sn_i, LSN, ai_a, v, timeout, fw']
+fw' = true
+```
+
+提幣執行後，BOLT合約即廣播 `Withdraw` 事件。
+
+### 即時提幣
+![](images/instantWithdraw.jpg)
+
+#### 客戶端產生提幣側帳送至中心化服務 (1~2)
+首先，客戶端產生 `lightTransaction` 並對其簽章：
+
+```
+sn_i = getLatestStageHeight(I)
+LSN  = getLSN(ai_a)
+t    = makeLightTx(sn_i, LSN, ai_a, v, 'withdraw')
+tc   = signLightTx(t)
+r    = sendLightTx(tc, ServerURL)
+```
+
+#### 中心化服務驗證側帳並送至節點 (3~5)
+中心化服務取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至節點：
+
+```
+result = verifyLightTx(tc)
+
+if (result == true) {
+  ts = signLightTx(tc)
+  r = sendLightTx(ts, NodeURL)
+}
+```
+
+#### 節點驗證側帳後產生收據並回傳中心化服務 (6~9)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Account Set` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
+
+```
+result = verifyLightTx(ts)
+
+if (result == true) {
+  r     = makeReceipt(ts)
+  A'    = updateAccount(A, r)
+  Ri_s' = saveReceipt(Ri_s, r)
+  return r
+}
+```
+
+#### 中心化服務取得收據後向BOLT合約執行即時提幣並將收據送至客戶端 (10~13, 16~17)
+中心化服務取得 `receipt` 後即對其產生簽章：
+
+```
+rs = signReceipt(r)
+```
+
+若提幣額度小於或等於 `v_i`，則中心化服務可以呼叫BOLT合約之 `*instantWithdraw` 方法以執行即時提幣：
+
+```
+Lw'  = *instantWithdraw(Lw)
+```
+
+其中
+
+```
+lw   = [DSN, sn_i, ai_a, v, timeout, fw]
+fw   = false
+Lw   = [lw1, lw2, ...]
+Lw'  = push(Lw, lw)
+```
+
+中心化服務待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
+
+```
+return rs
+```
+
+申請提幣執行後，BOLT合約即廣播 `instantWithdrawal` 事件。
+
+#### 客戶端取得收據 (14~15)
+最後，客戶端取得收據後即儲存：
+
+```
+Ri_c' = saveReceipt(Ri_c, rs)
 ```
 
 ### 轉帳 Remittance
