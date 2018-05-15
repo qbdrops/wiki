@@ -16,11 +16,12 @@
 | `fc` | Flag indicating wether challenge succeeded or not |
 | `fp` | Flag indicating wether challenge compensated or not |
 | `fn` | Flag indicating wether `stage` is finalized or not |
-| `A` | Account set |
-| `a` | Account |
-| `ai` | Account of user `i` |
-| `ai_a` | Address of accoount `i` |
-| `ai_b` | Balance of accoount `i` |
+| `A` | `account` set |
+| `Ai_h` | `account` root hash of stage height `i` |
+| `a` | `account` |
+| `ai` | `account` of user `i` |
+| `ai_a` | Address of `account` `i` |
+| `ai_b` | Balance of `account` `i` |
 | `T` | `lightTransaction` set |
 | `Ti` | `lightTransaction` set of stage height `i` |
 | `t` | `lightTransaction` |
@@ -31,12 +32,11 @@
 | `Ri_h` | `receipt` root hash of stage height `i` |
 | `Ri_s` | `receipt` set stored by server |
 | `Ri_c` | `receipt` set stored by client |
-| `B` | `balance` tree |
-| `Bi_h` | `balance` root hash of stage height `i` |
 | `r` | `receipt` |
 | `r_s` | `receipt` signed by server |
 | `LSN` | Local sequence number |
 | `GSN` | Global sequence number |
+| `DSN` | Deposit sequence number |
 | `v` | Value of assets |
 | `p` | Challenge penalty |
 

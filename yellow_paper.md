@@ -230,24 +230,15 @@ receipt = {
 ### 收據樹 Receipt Tree
 為索引莫克樹之資料結構，在側鏈協定裡，中心化服務會持續接收客戶端送來的側帳產生對應的收據，將每筆收據儲存起來，並在側鏈新增區段時產生收據樹，把根雜湊值放到智能合約上，以利後續稽核員與客戶端可以和去中心化儲存媒體取得相關之密碼學證據對收據進行驗證。
 
-### 餘額樹 Balance Tree
+### 帳戶樹 Account Tree
 同樣為索引莫克樹之資料結構，在側鏈協定裡，是中心化服務用來紀錄側鏈中所有客戶端之餘額，當中心化服務收到側帳產生對應之收據同時，會根據每筆收據動態更新餘額樹中客戶端之餘額。
 
 ## 協定 Protocol
 ### 存幣
 ![](images/deposit.jpg)
 
-#### 客戶端向無窮鏈合約申請存幣 (1~2)
-首先， 客戶端向無窮鏈合約查詢 `stageHeight` 並產生 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
-
-```
-sn_i = getLatestStageHeight(I)
-LSN  = getLSN(ai_a)
-t    = makeLightTx(sn_i, LSN, ai_a, v, 'deposit')
-tc   = signLightTx(t)
-```
-
-接下來，客戶端呼叫無窮鏈合約之 `proposeDeposit` 方法以提出存幣申請，這個方法會在合約新增一筆 `Deposit Log`：
+#### 客戶端向BOLT合約申請存幣 (1~3)
+首先，客戶端將欲存入的資產(ETH 或 ERC20代幣)轉入BOLT合約，BOLT合約內部會呼叫 `*proposeWithdrawal` 方法，這個方法會在合約新增一筆 `Deposit Log`，並廣播 `ProposeDeposit` 事件，其中包含 `DSN`：
 
 ```
 Ld'  = *proposeDeposit(Ld, tc)
@@ -256,16 +247,25 @@ Ld'  = *proposeDeposit(Ld, tc)
 其中
 
 ```
-ld   = [sn_i, LSN, ai_a, v, timeout, fd]
+ld   = [DSN, sn_i, ai_a, v, timeout, fd]
 fd   = false
 Ld   = [ld1, ld2, ...]
 Ld'  = push(Ld, ld)
 ```
 
-存幣申請後，無窮鏈合約即廣播 `ProposeDeposit` 事件，其中包含 `lightTransaction`。
+#### 客戶端監聽申請存幣事件並產生存幣側帳送至中心化服務 (4~5)
+之後，客戶端監聽無窮鏈合約的 `ProposeDeposit` 事件並取得 `DSN`，接著產生 `lightTransaction` 並對其簽章：
 
-#### 中心化服務監聽申請存幣事件並產生存幣側帳送至節點 (3~5)
-之後，中心化服務監聽無窮鏈合約的 `ProposeDeposit` 事件並取得 `lightTransaction`，之後即驗證其客戶端簽章，若驗證成功則中心化服務再對其產生簽章並送至節點：
+```
+sn_i = getLatestStageHeight(I)
+LSN  = getLSN(ai_a)
+t    = makeLightTx(sn_i, LSN, ai_a, v, 'deposit')
+tc   = signLightTx(t)
+r    = sendLightTx(tc, ServerURL)
+```
+
+#### 中心化服務驗證側帳並送至節點 (6~8)
+中心化服務取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至節點：
 
 ```
 result = verifyLightTx(tc)
@@ -276,25 +276,30 @@ if (result == true) {
 }
 ```
 
-#### 節點驗證側帳後產生收據並回傳中心化服務 (6~8)
-節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
+#### 節點驗證側帳後產生收據並回傳中心化服務 (9~12)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Account Set` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
 
 ```
 result = verifyLightTx(ts)
 
 if (result == true) {
   r     = makeReceipt(ts)
-  B'    = updateBalance(B, r)
+  A'    = updateAccount(A, r)
   Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
 
-#### 中心化服務取得收據並向無窮鏈合約執行存幣 (9~13)
-中心化服務取得 `receipt` 後即對其簽章，接著呼叫合約之 `deposit` 方法以執行存幣：
+#### 中心化服務取得收據項後向BOLT合約執行存幣並將收據送至客戶端 (13~16, 19~20)
+中心化服務取得 `receipt` 後即對其產生簽章：
 
 ```
-rs  = signReceipt(r)
+rs = signReceipt(r)
+```
+
+接著中心化服務呼叫BOLT合約之 `*deposit` 方法以執行存幣：
+
+```
 Ld' = *deposit(rs)
 ```
 
@@ -307,10 +312,16 @@ ld'  = [sn_i, LSN, ai_a, v, timeout, fd']
 fd'  = true
 ```
 
-存幣執行後，無窮鏈合約即廣播 `Deposit` 事件，其中包含 `receipt`。
+待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
 
-#### 客戶端監聽存幣事件並取得收據 (14~15)
-最後，客戶端監聽無窮鏈合約 `Deposit` 事件以取得 `receipt` 並儲存：
+```
+return rs
+```
+
+存幣執行後，BOLT合約即廣播 `Deposit` 事件。
+
+#### 客戶端取得收據 (17~18)
+最後，客戶端取得收據後即儲存：
 
 ```
 Ri_c' = saveReceipt(Ri_c, rs)
