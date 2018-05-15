@@ -241,7 +241,7 @@ receipt = {
 首先，客戶端將欲存入的資產(ETH 或 ERC20代幣)轉入BOLT合約，BOLT合約內部會呼叫 `*proposeWithdrawal` 方法，這個方法會在合約新增一筆 `Deposit Log`，並廣播 `ProposeDeposit` 事件，其中包含 `DSN`：
 
 ```
-Ld'  = *proposeDeposit(Ld, tc)
+Ld'  = *proposeDeposit(Ld)
 ```
 
 其中
@@ -312,7 +312,7 @@ ld'  = [sn_i, LSN, ai_a, v, timeout, fd']
 fd'  = true
 ```
 
-待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
+中心化服務待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
 
 ```
 return rs
