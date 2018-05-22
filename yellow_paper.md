@@ -111,14 +111,18 @@
 ### 側帳 Light Transaction
 側帳是側鏈不包含買賣雙方交易餘額之交易內容，其中：
 
-    1. lightTxHash : lightTxData 運算產生之雜湊值
-    2. from : 交易送方之地址
-    3. to : 交易收方之地址
-    4. value : 交易金額
-    5. fee : 手續費
-    6. LSN : 全名為 Local Sequence Number，是客戶端每筆交易之亂數編號
-    7. SigClientLightTx : 客戶端對 lightTxHash 簽章之結果
-    8. SigServerLightTx : 中心化服務對 lightTxHash 簽章之結果
+    1. lightTxHash: lightTxData 運算產生之雜湊值
+    2. from: 交易送方之地址
+    3. to: 交易收方之地址
+    4. value: 交易金額
+    5. fee: 手續費
+    6. nonce: 客戶端每筆交易之亂數編號
+    7. asset: 資產編號
+    9. metadataHash: metadata 之雜湊值
+    10. number: DSN / WSN / 0
+    11. SigClientLightTx : 客戶端對 lightTxHash 簽章之結果
+    12. SigServerLightTx : 中心化服務對 lightTxHash 簽章之結果
+    13. metadata: 額外資訊
 
 完整資料格式可分為以下四種:
 
@@ -133,11 +137,14 @@
 lightTx = {
     lightTxHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166cca',
     lightTxData: {
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        from: '49aabbbe9141fe7a80804bdf01473e250a3414cb',
+        to: '5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
         value: 100,
         fee: 5,
-        LSN: 2
+        nonce: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
+        asset: 1,
+        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
+        number: 0
     },
     sig: {
         clientLightTx: {
@@ -150,6 +157,9 @@ lightTx = {
             r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         }
+    },
+    metadata: {
+        foo: 'bar'
     }
 }
 ```
@@ -179,11 +189,14 @@ receipt = {
     lightTxHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
     receiptHash: '73f83ec398e8a4cd2354d1a622426003eeda9b0d0b4999368468dacd08848638',
     lightTxData: {
-        from: '0x49aabbbe9141fe7a80804bdf01473e250a3414cb',    
-        to: '0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        from: '49aabbbe9141fe7a80804bdf01473e250a3414cb',
+        to: '5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
         value: 100,
         fee: 5,
-        LSN: 2
+        nonce: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
+        asset: 1,
+        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
+        number: 0
     },
     receiptData: {
         stageHeight: 1,
@@ -192,7 +205,6 @@ receipt = {
         fromBalance: 50,
         toBalance: 500
     },
-    
     sig:{
         clientLightTx: {
             v: 28,
@@ -209,6 +221,9 @@ receipt = {
             r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         }
+    },
+    metadata: {
+        foo: 'bar'
     }
 }
 ```
@@ -477,7 +492,8 @@ Lw'  = *instantWithdraw(Lw)
 其中
 
 ```
-lw   = [DSN, sn_i, ai_a, v, timeout, fw]
+WSN  = sha3(rs_from, rs_nonce)
+lw   = [WSN, sn_i, ai_a, v, timeout, fw]
 fw   = false
 Lw   = [lw1, lw2, ...]
 Lw'  = push(Lw, lw)
