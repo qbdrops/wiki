@@ -114,15 +114,15 @@
     1. lightTxHash: lightTxData 運算產生之雜湊值
     2. from: 交易送方之地址
     3. to: 交易收方之地址
-    4. value: 交易金額
-    5. fee: 手續費
-    6. nonce: 客戶端每筆交易之亂數編號
-    7. asset: 資產編號
+    4. assetID: 資產編號
+    5. value: 交易金額
+    6. fee: 手續費
+    7. nonce: 客戶端每筆交易之亂數編號
+    8. logID: DSN / WSN / 0
     9. metadataHash: metadata 之雜湊值
-    10. number: DSN / WSN / 0
-    11. SigClientLightTx : 客戶端對 lightTxHash 簽章之結果
-    12. SigServerLightTx : 中心化服務對 lightTxHash 簽章之結果
-    13. metadata: 額外資訊
+    10. SigClientLightTx : 客戶端對 lightTxHash 簽章之結果
+    11. SigServerLightTx : 中心化服務對 lightTxHash 簽章之結果
+    12. metadata: 額外資訊
 
 完整資料格式可分為以下四種:
 
@@ -139,12 +139,12 @@ lightTx = {
     lightTxData: {
         from: '49aabbbe9141fe7a80804bdf01473e250a3414cb',
         to: '5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        assetID: 1,
         value: 100,
         fee: 5,
         nonce: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
-        asset: 1,
-        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
-        number: 0
+        logID: 0,
+        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
     },
     sig: {
         clientLightTx: {
@@ -191,12 +191,12 @@ receipt = {
     lightTxData: {
         from: '49aabbbe9141fe7a80804bdf01473e250a3414cb',
         to: '5b9688b5719f608f1cb20fdc59626e717fbeaa9a',
+        assetID: 1,
         value: 100,
         fee: 5,
         nonce: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
-        asset: 1,
-        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
-        number: 0
+        logID: 0,
+        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
     },
     receiptData: {
         stageHeight: 1,
