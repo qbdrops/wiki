@@ -1,4 +1,5 @@
-# Infinitechain 金流側鏈黃皮書
+# BOLT: Booster of Ledger Technology
+### Yellow Paper
 
 ---
 
@@ -12,7 +13,7 @@
         - 客戶端 Client
         - 稽核員 Auditor
         - 去中心化儲存媒體 Decentralized Storage
-        - 無窮鏈合約 Infinitechain Contract
+        - 無窮鏈合約 BOLT Contract
     - 資料模型 Data Model
         - 區段 Stage
         - 側帳 Light Transaction
@@ -85,11 +86,11 @@
 # 側鏈 Sidechain
 ## 角色 Roles
 ### 中心化服務 Central service
-中心化服務是指結合了無窮鏈之伺服器端軟體開發套件(Infinitechain server SDK)，並提供特定服務給客戶端的應用平台。
+中心化服務是指結合了無窮鏈之伺服器端軟體開發套件(BOLT SDK)，並提供特定服務給客戶端的應用平台。
 可能的中心化服務包括了線上直播視訊平台(Live video streaming platform)、電子商務網站(E-commerce website)等。
 
 ### 客戶端 Client
-客戶端是指結合了無窮鏈之客戶端軟體開發套件(Infinitechain client SDK)，能為客戶提供與中心化服務介接的應用程式。
+客戶端是指結合了無窮鏈之客戶端軟體開發套件(BOLT SDK)，能為客戶提供與中心化服務介接的應用程式。
 可能的客戶端包括了網頁瀏覽器(Web browser)、手機應用程式(Moblie app)等。
 
 ### 稽核員 Auditor
@@ -706,7 +707,7 @@ if (*isSettled(sl) && !*isInChallengePeriod(s)) {
 
 一個完整的側帳包含許多資訊，其中`lightTxData`內含了一個交易送方自願承諾的交易資訊，其中最容易被竄改的資料為交易金額`value`，以下舉例保有竄改機會的中心化服務可能在未經交易送方同意的狀況下，做出以下的行為，試圖以此竄改的結果圖利自身或特定用戶。
 
-假設Bob的地址`0x49aabbbe9141fe7a80804bdf01473e250a3414cb`試圖傳送給Alice，其地址為`0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a`，100個單位的代幣，則Bob可以透過Infinitechain SDK產生如下`lightTxData`資料，計算出`lightTxHash`，並對`lightTxHash`簽章，附加簽章回側帳資訊上。隨後傳送此側帳給中心化服務，等待出帳。
+假設Bob的地址`0x49aabbbe9141fe7a80804bdf01473e250a3414cb`試圖傳送給Alice，其地址為`0x5b9688b5719f608f1cb20fdc59626e717fbeaa9a`，100個單位的代幣，則Bob可以透過BOLT SDK產生如下`lightTxData`資料，計算出`lightTxHash`，並對`lightTxHash`簽章，附加簽章回側帳資訊上。隨後傳送此側帳給中心化服務，等待出帳。
 
 在側鏈節點沒有被中心化服務竄改驗證簽章邏輯的情況下，可能產生以下兩種攻擊：
 
@@ -825,7 +826,7 @@ receipt = {
 
 ### GSN
 
-GSN作為管理側帳在某個階段各客戶端交易之順序編號，對側帳合理性的影響為之重大，故也可能遭中心化服務竄改與圖利他人，本節討論各個針對GSN攻擊的可能，與其造成的影響，並說明Infinitechain金流側鏈如何應對此類攻擊。
+GSN作為管理側帳在某個階段各客戶端交易之順序編號，對側帳合理性的影響為之重大，故也可能遭中心化服務竄改與圖利他人，本節討論各個針對GSN攻擊的可能，與其造成的影響，並說明BOLT如何應對此類攻擊。
 
 
 #### 重複GSN
