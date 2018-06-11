@@ -252,36 +252,27 @@ if (result == true) {
   return r
 }
 ```
-#### Central service get the receipt (13~16, 19~20)
+#### Central service get the receipt (13~16)
 After central service get the `receipt` then sign it.
-
 ```
 rs = signReceipt(r)
 ```
-
 Then central service call `*deposit` function on the BOLT contract.
-
 ```
 Ld' = *deposit(rs)
 ```
-
 which
-
 ```
 Ld   = [ld1, ld2, ..., ld]
 Ld'  = [ld1, ld2, ..., ld']
 ld'  = [sn_i, LSN, ai_a, v, timeout, fd']
 fd'  = true
 ```
-
 After central service get the `txHash` then send `receipt` back to the client.
-
 ```
 return rs
 ```
-
 After executing the deposit function, BOLT contract broadcast `Deposit` event.
-
 #### Client get the receipt (17~18)
 Finally, client store the receipt
 ```
@@ -291,7 +282,6 @@ Ri_c' = saveReceipt(Ri_c, rs)
 ![](images/withdraw.jpg)
 #### Client propose withdraw (1~2)
 First, client generate and sign the `lightTransaction`.
-
 ```
 sn_i = getLatestStageHeight(I)
 LSN  = getLSN(ai_a)
@@ -299,7 +289,6 @@ t    = makeLightTx(sn_i, LSN, ai_a, v, 'withdraw')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
-
 #### central service verify the light transaction (3~5)
 Central service verify the signature. If it is successful then sign the `lightTransaction` and send to the booster node.
 ```
@@ -312,7 +301,6 @@ if (result == true) {
 ```
 #### Booster node verify the signature (6~9)
 Booster node get the `lightTransaction` and verify the signature if it's signed by the client and the central service. If it is successful then generate `receipt`, update `Account Set` and store `receipt`. Finally, send `receipt` back to the central service.
-
 ```
 result = verifyLightTx(ts)
 
@@ -323,36 +311,26 @@ if (result == true) {
   return r
 }
 ```
-
 #### Central service get the `receipt` (10~13, 16~17)
-
 ```
 rs = signReceipt(r)
 ```
-
 if withdraw value is larger than `v_i`, then central service should call `*proposeWithdrawal`
-
 ```
 Lw'  = *proposeWithdrawal(Lw)
 ```
-
 which
-
 ```
 lw   = [DSN, sn_i, ai_a, v, timeout, fw]
 fw   = false
 Lw   = [lw1, lw2, ...]
 Lw'  = push(Lw, lw)
 ```
-
 central service get the `txHash` then send back `receipt` to the client
-
 ```
 return rs
 ```
-
 After withdraw, BOLT contract broadcast `proposeWithdrawal` event.
-
 #### Client get the receipt (14~15)
 ```
 Ri_c' = saveReceipt(Ri_c, rs)
@@ -361,28 +339,21 @@ Ri_c' = saveReceipt(Ri_c, rs)
 If withdraw value is larger than `v_i`, then this movement should wait a challenge period (auditing / take objection / exonerate / penalty). 
 #### Client withdraw the money (19~20)
 Finally, client can call `withdraw` funciton.
-
 ```
 Lw' = *withdraw(Lw, rs)
 ```
-
 which
-
 ```
 Lw  = [lw1, lw2, ..., lw]
 Lw' = [lw1, lw2, ..., lw']
 lw' = [sn_i, LSN, ai_a, v, timeout, fw']
 fw' = true
 ```
-
-提幣執行後，BOLT合約即廣播 `Withdraw` 事件。
-
-### 即時提幣
+After withdraw function executing, BOLT contract then broadcast `Withdraw` event.
+### Instant Withdraw
 ![](images/instantWithdraw.jpg)
-
-#### 客戶端產生提幣側帳送至中心化服務 (1~2)
-首先，客戶端產生 `lightTransaction` 並對其簽章：
-
+#### Client generate the withdraw request (1~2)
+First, Client generate and sign the `lightTransaction`
 ```
 sn_i = getLatestStageHeight(I)
 LSN  = getLSN(ai_a)
@@ -390,10 +361,8 @@ t    = makeLightTx(sn_i, LSN, ai_a, v, 'withdraw')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
-
-#### 中心化服務驗證側帳並送至節點 (3~5)
-中心化服務取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至節點：
-
+#### Central service verify the transactio (3~5)
+Central service get the `lightTransaction` and verify the signature. If it is successful then sign and send it to the booster.
 ```
 result = verifyLightTx(tc)
 
@@ -402,10 +371,8 @@ if (result == true) {
   r = sendLightTx(ts, NodeURL)
 }
 ```
-
-#### 節點驗證側帳後產生收據並回傳中心化服務 (6~9)
-節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Account Set` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
-
+#### Booster verify the signature(6~9)
+Booster node get the `lightTransaction` and verify the signature if it's signed by the client and the central service. If it is successful then generate `receipt`, update `Account Set` and store `receipt`. Finally, send `receipt` back to the central service.
 ```
 result = verifyLightTx(ts)
 
@@ -416,22 +383,15 @@ if (result == true) {
   return r
 }
 ```
-
-#### 中心化服務取得收據後向BOLT合約執行即時提幣並將收據送至客戶端 (10~13, 16~17)
-中心化服務取得 `receipt` 後即對其產生簽章：
-
+#### Central service get the `receipt` (10~13, 16~17)
 ```
 rs = signReceipt(r)
 ```
-
-若提幣額度小於或等於 `v_i`，則中心化服務可以呼叫BOLT合約之 `*instantWithdraw` 方法以執行即時提幣：
-
+if withdraw value is smaller than `v_i`, then central service should call `*instantWithdraw`
 ```
 Lw'  = *instantWithdraw(Lw)
 ```
-
-其中
-
+which
 ```
 WSN  = sha3(rs_from, rs_nonce)
 lw   = [WSN, sn_i, ai_a, v, timeout, fw]
@@ -439,28 +399,19 @@ fw   = false
 Lw   = [lw1, lw2, ...]
 Lw'  = push(Lw, lw)
 ```
-
-中心化服務待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
-
+central service get the `txHash` then send back `receipt` to the client
 ```
 return rs
 ```
-
-申請提幣執行後，BOLT合約即廣播 `instantWithdrawal` 事件。
-
-#### 客戶端取得收據 (14~15)
-最後，客戶端取得收據後即儲存：
-
+After instant withdraw function executing, BOLT contract then broadcast `instantWithdrawal` event.
+#### Client get the receipt (14~15)
 ```
 Ri_c' = saveReceipt(Ri_c, rs)
 ```
-
-### 轉帳 Remittance
+### Remittance
 ![](images/remittance.jpg)
-
-#### 客戶端產生轉帳側帳並送至中心化服務 (1~2)
-首先，客戶端向無窮鏈合約查詢 `stageHeight` 並計算 `LSN` ，接著產生 `lightTransaction` 並對其簽章：
-
+#### Client generate light transaction (1~2)
+First, Client check the `stageHeight` from BOLT contract and calculate `LSN`. Using it to generate and sign the `lightTransaction`
 ```
 sn_i = getLatestStageHeight(I)
 LSN  = getLSN(ai_a)
@@ -468,10 +419,8 @@ t    = makeLightTx(sn_i, LSN, v, ai_a, 'remittance')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
 ```
-
-#### 中心化服務驗證側帳並送至節點 (3~5)
-中心化服務取得 `lightTransaction` 後即驗證其客戶端簽章，若驗證成功則對其產生簽章並送至節點：
-
+#### Central service verify the light transaction (3~5)
+Central service get the lightTransaction and verify the client's signature. If verification is successful, then send it to the booster.
 ```
 result = verifyLightTx(tc)
 
@@ -480,10 +429,8 @@ if (result == true) {
   r = sendLightTx(ts, NodeURL)
 }
 ```
-
-#### 節點驗證側帳後產生收據並回傳中心化服務 (6~7)
-節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Balance Tree` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務：
-
+#### Booster generate the receipt (6~7)
+After the booster verify the lightTransaction which is signed by the client and the server. It will generate the receipt, update Account Set and store the receipt to the database. Finally, sending back the receipt.
 ```
 result = verifyLightTx(ts)
 
@@ -494,44 +441,32 @@ if (result == true) {
   return r
 }
 ```
-
-#### 中心化服務取得收據並送至客戶端 (8~9)
-中心化服務取得 `receipt` 後即對其產生簽章並回傳客戶端：
-
+#### Central service get the receipt (8~9)
+After central service get the receipt then sign it.
 ```
 rs = signReceipt(r)
 return rs
 ```
-
-#### 客戶端取得收據 (10~12)
-最後，客戶端取得收據後即儲存：
-
+#### Client get the receipt (10~12)
+Finally, client store the receipt
 ```
 Ri_c' = saveReceipt(Ri_c, rs)
 ```
-
-### 分散式稽核 Distributed Auditing
+### Distributed Auditing
 ![](images/challenge.jpg)
-
-以上為分散式稽核**客戶端提出抗議**且**中心化服務自清失敗**的時序圖。其等同於下列流程：
+The above sequence diagram illustrate the client takes objection and central service exonerates fail.
 
 ![](images/flow.jpg)
+It includes `attach`,`audit`,`challenge`,`defend`,`compensate` and `finalize`.
 
-其中包括 `attach` `audit` `challenge` `defend` `compensate` `finalize` 等行為。
+After `attach`, the client, central service and auditor can using different function to make the booster's correctness.
 
-呼叫 `attach` 後無窮鏈合約將廣播 `Attach` 事件，這同時也揭示了**客戶端-中心化服務-稽核員賽局**的開始。這些角色之間能夠互相制衡以確保側鏈之正確性：客戶端可以呼叫 `challenge` 方法向合約提出抗議，而中心化服務端也能呼叫 `defend` 方法解除抗議。最後，所有的 `Stage` 都必須透過呼叫 `finalize` 達成最終性後才能再新增下一個 `Stage`。
-
-以下將針對不同行為進行說明。
-
-#### 中心化服務新增側鏈區段 (1~4)
-首先，中心化服務呼叫 `getRootHash` 方法向節點索取 `receipt rootHash` 及 `balance rootHash`：
-
+#### Central service attach new stage (1~4)
+First, central service call `getRootHash` to get `receipt rootHash` and `balance rootHash`
 ```
 [Ri_h, Bi_h] = getRootHash(Ri)
 ```
-
-接著，中心化服務呼叫合約 `*attach` 方法以將新 `stage` 放至無窮鏈合約：
-
+Then, central service call `*attach` to add new `stage`
 ```
 S'  = *attach(S, Ri_h, Bi_h)
 si  = [Ri_h, Bi_h, n, fn, Lc, Lw, Ld]
@@ -540,7 +475,6 @@ S'  = [s1, s2, s3, ..., si]
 
 *Attach(Ri_h)
 ```
-
 #### 客戶端進行稽核，稽核失敗則提出抗議 (5~15)
 ![](images/audit.jpg)
 
