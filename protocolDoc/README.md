@@ -1,0 +1,1 @@
+Before you open infinitechain.mdj, you need to install StarUML (Version 2.8.1).
