@@ -6661,13 +6661,13 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 352,
+											"left": 351,
 											"top": 192,
 											"width": 195.5283203125,
 											"height": 13,
 											"autoResize": false,
-											"alpha": 1.6162186010618351,
-											"distance": 88.09086218218096,
+											"alpha": 1.6167399773294506,
+											"distance": 87.09190547921202,
 											"hostEdge": {
 												"$ref": "AAAAAAFh3zi18TrPnzI="
 											},
@@ -6831,13 +6831,13 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 363,
+											"left": 376,
 											"top": 232,
-											"width": 148.82080078125,
+											"width": 139,
 											"height": 13,
 											"autoResize": false,
-											"alpha": 1.623378381499762,
-											"distance": 76.10519036176179,
+											"alpha": 1.6183784244157722,
+											"distance": 84.09518416651456,
 											"hostEdge": {
 												"$ref": "AAAAAAFh3zmR5zroq+s="
 											},
@@ -7001,9 +7001,9 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 371,
+											"left": 376,
 											"top": 263,
-											"width": 152.3818359375,
+											"width": 143,
 											"height": 13,
 											"autoResize": false,
 											"alpha": -3.551720153113854,
@@ -7107,7 +7107,7 @@
 											"left": 616,
 											"top": 280,
 											"width": 14,
-											"height": 169,
+											"height": 212,
 											"autoResize": false
 										}
 									],
@@ -7341,13 +7341,13 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 664,
+											"left": 671,
 											"top": 331,
 											"width": 96.93505859375,
 											"height": 13,
 											"autoResize": false,
-											"alpha": 1.5896610092578491,
-											"distance": 53.009433122794285,
+											"alpha": 1.5874604477318315,
+											"distance": 60.00833275470999,
 											"hostEdge": {
 												"$ref": "AAAAAAFiBHB1vHakXic="
 											},
@@ -7511,19 +7511,19 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 648,
+											"left": 664,
 											"top": 376,
-											"width": 244.74658203125,
+											"width": 99.74658203125,
 											"height": 13,
 											"autoResize": false,
-											"alpha": 1.606815772981807,
-											"distance": 111.07204868912791,
+											"alpha": 1.6447343508102747,
+											"distance": 54.147945482723536,
 											"hostEdge": {
 												"$ref": "AAAAAAFh3zuhBDsWmNQ="
 											},
 											"edgePosition": 1,
 											"underline": false,
-											"text": "8 : save receipt, update balance tree",
+											"text": "8 : signReceipt",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -7655,6 +7655,176 @@
 								},
 								{
 									"_type": "UMLSeqMessageView",
+									"_id": "AAAAAAFl8IwsRqZOI5Y=",
+									"_parent": {
+										"$ref": "AAAAAAFh1knrV0yyKZA="
+									},
+									"model": {
+										"$ref": "AAAAAAFl8IwsRaZNML0="
+									},
+									"subViews": [
+										{
+											"_type": "EdgeLabelView",
+											"_id": "AAAAAAFl8IwsRqZPI20=",
+											"_parent": {
+												"$ref": "AAAAAAFl8IwsRqZOI5Y="
+											},
+											"model": {
+												"$ref": "AAAAAAFl8IwsRaZNML0="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 671,
+											"top": 427,
+											"width": 212,
+											"height": 13,
+											"autoResize": false,
+											"alpha": 1.5792696994797344,
+											"distance": 118.00423721205946,
+											"hostEdge": {
+												"$ref": "AAAAAAFl8IwsRqZOI5Y="
+											},
+											"edgePosition": 1,
+											"underline": false,
+											"text": "9 : save receipt, update balance tree",
+											"horizontalAlignment": 2,
+											"verticalAlignment": 5,
+											"wordWrap": false
+										},
+										{
+											"_type": "EdgeLabelView",
+											"_id": "AAAAAAFl8IwsRqZQsTk=",
+											"_parent": {
+												"$ref": "AAAAAAFl8IwsRqZOI5Y="
+											},
+											"model": {
+												"$ref": "AAAAAAFl8IwsRaZNML0="
+											},
+											"visible": false,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 683,
+											"top": 427,
+											"width": 0,
+											"height": 13,
+											"autoResize": false,
+											"alpha": 1.5707963267948966,
+											"distance": 25,
+											"hostEdge": {
+												"$ref": "AAAAAAFl8IwsRqZOI5Y="
+											},
+											"edgePosition": 1,
+											"underline": false,
+											"horizontalAlignment": 2,
+											"verticalAlignment": 5,
+											"wordWrap": false
+										},
+										{
+											"_type": "EdgeLabelView",
+											"_id": "AAAAAAFl8IwsR6ZR/3k=",
+											"_parent": {
+												"$ref": "AAAAAAFl8IwsRqZOI5Y="
+											},
+											"model": {
+												"$ref": "AAAAAAFl8IwsRaZNML0="
+											},
+											"visible": false,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 649,
+											"top": 428,
+											"width": 0,
+											"height": 13,
+											"autoResize": false,
+											"alpha": -1.5707963267948966,
+											"distance": 10,
+											"hostEdge": {
+												"$ref": "AAAAAAFl8IwsRqZOI5Y="
+											},
+											"edgePosition": 1,
+											"underline": false,
+											"horizontalAlignment": 2,
+											"verticalAlignment": 5,
+											"wordWrap": false
+										},
+										{
+											"_type": "UMLActivationView",
+											"_id": "AAAAAAFl8IwsR6ZSjUI=",
+											"_parent": {
+												"$ref": "AAAAAAFl8IwsRqZOI5Y="
+											},
+											"model": {
+												"$ref": "AAAAAAFl8IwsRaZNML0="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 623,
+											"top": 444,
+											"width": 14,
+											"height": 29,
+											"autoResize": false
+										}
+									],
+									"visible": true,
+									"enabled": true,
+									"lineColor": "#000000",
+									"fillColor": "#ffffff",
+									"fontColor": "#000000",
+									"font": "Arial;13;0",
+									"showShadow": true,
+									"containerChangeable": false,
+									"containerExtending": false,
+									"head": {
+										"$ref": "AAAAAAFh1kvCk00Ji6E="
+									},
+									"tail": {
+										"$ref": "AAAAAAFh1kvCk00Ji6E="
+									},
+									"lineStyle": 0,
+									"points": "629:424;659:424;659:444;636:444",
+									"nameLabel": {
+										"$ref": "AAAAAAFl8IwsRqZPI20="
+									},
+									"stereotypeLabel": {
+										"$ref": "AAAAAAFl8IwsRqZQsTk="
+									},
+									"propertyLabel": {
+										"$ref": "AAAAAAFl8IwsR6ZR/3k="
+									},
+									"activation": {
+										"$ref": "AAAAAAFl8IwsR6ZSjUI="
+									},
+									"showProperty": true,
+									"showType": true
+								},
+								{
+									"_type": "UMLSeqMessageView",
 									"_id": "AAAAAAFjYekUNjdM4YY=",
 									"_parent": {
 										"$ref": "AAAAAAFh1knrV0yyKZA="
@@ -7682,7 +7852,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 424,
-											"top": 423,
+											"top": 467,
 											"width": 91,
 											"height": 13,
 											"autoResize": false,
@@ -7693,7 +7863,7 @@
 											},
 											"edgePosition": 1,
 											"underline": false,
-											"text": "9 : receipt",
+											"text": "10 : receipt",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -7717,7 +7887,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 469,
-											"top": 463,
+											"top": 507,
 											"width": 0,
 											"height": 13,
 											"autoResize": false,
@@ -7751,7 +7921,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 470,
-											"top": 428,
+											"top": 472,
 											"width": 0,
 											"height": 13,
 											"autoResize": false,
@@ -7785,7 +7955,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 325,
-											"top": 444,
+											"top": 488,
 											"width": 14,
 											"height": 25,
 											"autoResize": false
@@ -7807,7 +7977,7 @@
 										"$ref": "AAAAAAFh1kvCk00Ji6E="
 									},
 									"lineStyle": 0,
-									"points": "616:444;325:444",
+									"points": "616:488;325:488",
 									"nameLabel": {
 										"$ref": "AAAAAAFjYekUNjdNqfM="
 									},
@@ -7852,18 +8022,18 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 351,
-											"top": 496,
+											"top": 504,
 											"width": 129,
 											"height": 13,
 											"autoResize": false,
-											"alpha": 1.5053153125752032,
-											"distance": 61.1310068623117,
+											"alpha": 1.6373634795087755,
+											"distance": 60.13318551349163,
 											"hostEdge": {
 												"$ref": "AAAAAAFh3z02UztGXE0="
 											},
 											"edgePosition": 1,
 											"underline": false,
-											"text": "10 : signReceipt",
+											"text": "11 : verifyReceipt",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -7887,7 +8057,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 379,
-											"top": 491,
+											"top": 507,
 											"width": 0,
 											"height": 13,
 											"autoResize": false,
@@ -7921,7 +8091,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 345,
-											"top": 492,
+											"top": 508,
 											"width": 0,
 											"height": 13,
 											"autoResize": false,
@@ -7955,7 +8125,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 318,
-											"top": 508,
+											"top": 524,
 											"width": 14,
 											"height": 29,
 											"autoResize": false
@@ -7977,7 +8147,7 @@
 										"$ref": "AAAAAAFh1kuvZkzprrg="
 									},
 									"lineStyle": 0,
-									"points": "325:488;355:488;355:508;331:508",
+									"points": "325:504;355:504;355:524;331:524",
 									"nameLabel": {
 										"$ref": "AAAAAAFh3z02UztHk14="
 									},
@@ -8021,7 +8191,7 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 152,
+											"left": 148,
 											"top": 516,
 											"width": 66.37744140625,
 											"height": 13,
@@ -8033,7 +8203,7 @@
 											},
 											"edgePosition": 1,
 											"underline": false,
-											"text": "11 : receipt",
+											"text": "12 : receipt",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -8056,7 +8226,7 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 200,
+											"left": 196,
 											"top": 555,
 											"width": 0,
 											"height": 13,
@@ -8090,7 +8260,7 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 201,
+											"left": 197,
 											"top": 520,
 											"width": 0,
 											"height": 13,
@@ -8147,7 +8317,7 @@
 										"$ref": "AAAAAAFh1kuvZkzprrg="
 									},
 									"lineStyle": 0,
-									"points": "325:536;77:536",
+									"points": "318:536;77:536",
 									"nameLabel": {
 										"$ref": "AAAAAAFh4Rbm+UJEDgk="
 									},
@@ -8203,7 +8373,7 @@
 											},
 											"edgePosition": 1,
 											"underline": false,
-											"text": "12 : verifyReceipt",
+											"text": "13 : verifyReceipt",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -8373,7 +8543,7 @@
 											},
 											"edgePosition": 1,
 											"underline": false,
-											"text": "13 : saveReceipt",
+											"text": "14 : saveReceipt",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -8637,6 +8807,23 @@
 							"_parent": {
 								"$ref": "AAAAAAFh1knrVkyx4GU="
 							},
+							"name": "signReceipt",
+							"source": {
+								"$ref": "AAAAAAFh1kvCk00CL+U="
+							},
+							"target": {
+								"$ref": "AAAAAAFh1kvCk00CL+U="
+							},
+							"visibility": "public",
+							"messageSort": "synchCall",
+							"isConcurrentIteration": false
+						},
+						{
+							"_type": "UMLMessage",
+							"_id": "AAAAAAFl8IwsRaZNML0=",
+							"_parent": {
+								"$ref": "AAAAAAFh1knrVkyx4GU="
+							},
 							"name": "save receipt, update balance tree",
 							"source": {
 								"$ref": "AAAAAAFh1kvCk00CL+U="
@@ -8671,7 +8858,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFh1knrVkyx4GU="
 							},
-							"name": "signReceipt",
+							"name": "verifyReceipt",
 							"source": {
 								"$ref": "AAAAAAFh1kuvZUziM1s="
 							},
