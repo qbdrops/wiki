@@ -9,7 +9,8 @@
     - 主側鏈架構
 - 加速器 Booster
     - 角色 Roles
-        - 中心化服務 Central service
+        - 加速器 Booster (目前版本：gringotts)
+        - 企業端 Server
         - 客戶端 Client
         - 稽核員 Auditor
         - 去中心化儲存媒體 Decentralized Storage
@@ -80,13 +81,16 @@
       在無窮鏈發行ICO，用戶會參考發行者的利他點數來作為了解發行者信用的一種參考，同時在每一期發行者提預算的時候，用戶可以投票決定是否要繼續撥款給這個發行者，或是因為發行者做得不好，便投票把所有剩餘的錢退回給用戶．
 
 ## 主側鏈架構
-在無窮鏈的主側鏈架構中，主鏈是用做信任機器來維持全球共識,而側鏈則是用做商業邏輯的使用．用戶送出的交易不需每筆都記錄在主鏈上，用戶會送一筆交易給一個代理人並授權讓代理人協助他做紀錄上鏈，代理人會將一段固定時間內的所有授權他的交易產生一個索引莫克樹並將其根雜湊值記錄在主鏈上．
+在無窮鏈的架構中，主鏈是用做信任機器來維持全球共識,而側鏈則是用做商業邏輯的使用．用戶送出的交易不需每筆都記錄在主鏈上，用戶會送一筆交易給一個代理人並授權讓代理人協助他做紀錄上鏈，代理人會將一段固定時間內的所有授權他的交易產生一個索引莫克樹並將其根雜湊值記錄在主鏈上．
 同時，為了確保主側鏈資料一致，無窮鏈使用了分散式稽核機制，允許每個用戶在結算帳本時稽核自己的交易，達到資訊對等，防止代理人出錯；而索引莫克樹的資料結構，也可以讓每個用戶可以快速地取得跟自己相關的資料切片．
 
-# 側鏈 Sidechain
+# 加速器 Booster
 ## 角色 Roles
-### 中心化服務 Central service
-中心化服務是指結合了無窮鏈之伺服器端軟體開發套件(BOLT SDK)，並提供特定服務給客戶端的應用平台。
+### 加速器 Booster
+加速器是指無窮鏈之伺服器端軟體開發套件(BOLT SDK)，提供記帳以及與公有鏈溝通之功能。
+
+### 企業端 Server
+企業端是指結合了無窮鏈之伺服器端軟體開發套件(BOLT SDK)，並提供特定服務給客戶端的應用平台。
 可能的中心化服務包括了線上直播視訊平台(Live video streaming platform)、電子商務網站(E-commerce website)等。
 
 ### 客戶端 Client
@@ -96,14 +100,14 @@
 ### 稽核員 Auditor
 
 稽核員是無窮鏈網路中負責維護側鏈安全與穩定的執法者，確保任何側鏈不會因中心化服務之共謀或錯帳，導致客戶端實質上的損失。
-稽核員可以是無窮鏈網路上的任意一個節點、客戶甚至是其他中心化服務，意味著任何人都可以對任意一條無窮鏈側鏈進行稽核。
+稽核員可以是無窮鏈網路上的任意一個節點、客戶甚至是其他中心化服務，意味著任何人都可以對任意一條無窮鏈加速器進行稽核。
 
 ### 去中心化儲存媒體
 去中心化儲存媒體是利用無窮鏈節點構成的一種分散式檔案儲存系統，該系統擁有資料不可串改與單點失效不影響資料完整性的特點。
 主要用於儲存中心化服務產生的索引莫克樹，並產生對應的訪問地址(Address)，以利稽核員對相應區段(Stage)的索引莫克樹進行稽核。
 
 ### 無窮鏈合約
-無窮鏈合約是中心化服務啟動側鏈需部署的智能合約，合約內制定了許多啟動側鏈後的規則，保證中心化服務維持側鏈運作，同時保障中心化服務與側鏈參與方的權益。
+無窮鏈合約是中心化服務啟動加速器需部署的智能合約，合約內制定了許多啟動側鏈後的規則，保證中心化服務維持側鏈運作，同時保障中心化服務與側鏈參與方的權益。
 
 ## 資料模型 Data Model
 ### 區段 Stage
@@ -120,10 +124,12 @@
     6. fee: 手續費
     7. nonce: 客戶端每筆交易之亂數編號
     8. logID: DSN / WSN / 0
-    9. metadataHash: metadata 之雜湊值
-    10. SigClientLightTx : 客戶端對 lightTxHash 簽章之結果
-    11. SigServerLightTx : 中心化服務對 lightTxHash 簽章之結果
-    12. metadata: 額外資訊
+    9. ClientMetadataHash: ClientMetadata 之雜湊值
+    10. ServerMetadataHash: ServerMetadata 之雜湊值
+    11. SigClientLightTx : 客戶端對 lightTxHash 簽章之結果
+    12. SigServerLightTx : 中心化服務對 lightTxHash 簽章之結果
+    13. ClientMetadata: 客戶端額外資訊
+    14. ServerMetadata: 企業端額外資訊
 
 完整資料格式可分為以下四種:
 
@@ -145,7 +151,8 @@ lightTx = {
         fee: 5,
         nonce: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
         logID: 0,
-        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        ClientMetadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        ServerMetadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
     },
     sig: {
         clientLightTx: {
@@ -159,7 +166,10 @@ lightTx = {
             s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         }
     },
-    metadata: {
+    ClientMetadata: {
+        foo: 'bar'
+    }
+    ServerMetadata: {
         foo: 'bar'
     }
 }
@@ -197,11 +207,13 @@ receipt = {
         fee: 5,
         nonce: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709',
         logID: 0,
-        metadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        ClientMetadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
+        ServerMetadataHash: '55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
     },
     receiptData: {
         stageHeight: 1,
         GSN: 21,
+        Pre-GSN: 17,
         lightTxHash: '6e7f1007bfb89f5af93fb9498fda2e9ca727166ccabd3a7109fa83e9d46d3f1a',
         fromBalance: 50,
         toBalance: 500
@@ -217,7 +229,7 @@ receipt = {
             r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
         },
-        serverReceipt: {
+        boosterReceipt: {
             v: 28,
             r: '0x384f9cb16fe9333e44b4ea8bba8cb4cb7cf910252e32014397c73aff5f94480c',
             s: '0x55305fc94b234c21d0025a8bce1fc20dbc7a83b48a66abc3cfbfdbc0a28c5709'
@@ -270,7 +282,6 @@ Ld'  = push(Ld, ld)
 
 ```
 sn_i = getLatestStageHeight(I)
-LSN  = getLSN(ai_a)
 t    = makeLightTx(sn_i, LSN, ai_a, v, 'deposit')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
@@ -288,31 +299,32 @@ if (result == true) {
 }
 ```
 
-#### 節點驗證側帳後產生收據並回傳中心化服務 (9~12)
-節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Account Set` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
+#### 節點驗證側帳後產生收據並回傳中心化服務 (9~13)
+節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`並對其簽章，更新 `Account Set` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
 
 ```
 result = verifyLightTx(ts)
 
 if (result == true) {
   r     = makeReceipt(ts)
+  rb = signReceipt(r)
   A'    = updateAccount(A, r)
   Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
 
-#### 中心化服務取得收據後向BOLT合約執行存幣並將收據送至客戶端 (13~16, 19~20)
-中心化服務取得 `receipt` 後即對其產生簽章：
+#### 中心化服務取得收據後向BOLT合約執行存幣並將收據送至客戶端 (14-17)
+中心化服務取得 `receipt` 後即驗證其加速器簽章：
 
 ```
-rs = signReceipt(r)
+result = verifyReceipt(rb)
 ```
 
 接著中心化服務呼叫BOLT合約之 `*deposit` 方法以執行存幣：
 
 ```
-Ld' = *deposit(rs)
+Ld' = *deposit(rb)
 ```
 
 其中
@@ -327,16 +339,16 @@ fd'  = true
 中心化服務待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
 
 ```
-return rs
+return rb
 ```
 
 存幣執行後，BOLT合約即廣播 `Deposit` 事件。
 
-#### 客戶端取得收據 (17~18)
+#### 客戶端取得收據 (18~20)
 最後，客戶端取得收據後即儲存：
 
 ```
-Ri_c' = saveReceipt(Ri_c, rs)
+Ri_c' = saveReceipt(Ri_c, rb)
 ```
 
 ### 提幣 Withdraw
@@ -347,7 +359,6 @@ Ri_c' = saveReceipt(Ri_c, rs)
 
 ```
 sn_i = getLatestStageHeight(I)
-LSN  = getLSN(ai_a)
 t    = makeLightTx(sn_i, LSN, ai_a, v, 'withdraw')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
@@ -365,7 +376,7 @@ if (result == true) {
 }
 ```
 
-#### 節點驗證側帳後產生收據並回傳中心化服務 (6~9)
+#### 節點驗證側帳後產生收據並回傳中心化服務 (6~10)
 節點取得 `lightTransaction` 後即驗證其客戶端簽章及中心化服務簽章，若驗證成功則產生 `receipt`，更新 `Account Set` 及儲存 `receipt` 於節點資料庫，最後將 `receipt` 回傳中心化服務 ：
 
 ```
@@ -373,17 +384,18 @@ result = verifyLightTx(ts)
 
 if (result == true) {
   r     = makeReceipt(ts)
+  rb    = signReceipt(r)
   A'    = updateAccount(A, r)
   Ri_s' = saveReceipt(Ri_s, r)
   return r
 }
 ```
 
-#### 中心化服務取得收據後向BOLT合約申請提幣並將收據送至客戶端 (10~13, 16~17)
-中心化服務取得 `receipt` 後即對其產生簽章：
+#### 中心化服務取得收據後向BOLT合約申請提幣並將收據送至客戶端 (11-16)
+中心化服務取得 `receipt` 後即驗加速器對其之簽章：
 
 ```
-rs = signReceipt(r)
+result = verifyReceipt(rb)
 ```
 
 若提幣額度大於 `v_i`，則中心化服務必須呼叫BOLT合約之 `*proposeWithdrawal` 方法以申請提幣：
@@ -404,16 +416,16 @@ Lw'  = push(Lw, lw)
 中心化服務待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
 
 ```
-return rs
+return rb
 ```
 
 申請提幣執行後，BOLT合約即廣播 `proposeWithdrawal` 事件。
 
-#### 客戶端取得收據 (14~15)
+#### 客戶端取得收據 (17)
 最後，客戶端取得收據後即儲存：
 
 ```
-Ri_c' = saveReceipt(Ri_c, rs)
+Ri_c' = saveReceipt(Ri_c, rb)
 ```
 
 #### 中心化服務新增側鏈區段並達成最終性 (18)
@@ -423,7 +435,7 @@ Ri_c' = saveReceipt(Ri_c, rs)
 最後，客戶端於最終性達成後即可呼叫BOLT合約 `withdraw` 方法以執行提幣：
 
 ```
-Lw' = *withdraw(Lw, rs)
+Lw' = *withdraw(Lw, rb)
 ```
 
 其中
@@ -445,7 +457,6 @@ fw' = true
 
 ```
 sn_i = getLatestStageHeight(I)
-LSN  = getLSN(ai_a)
 t    = makeLightTx(sn_i, LSN, ai_a, v, 'withdraw')
 tc   = signLightTx(t)
 r    = sendLightTx(tc, ServerURL)
@@ -471,6 +482,7 @@ result = verifyLightTx(ts)
 
 if (result == true) {
   r     = makeReceipt(ts)
+  rb    = signReceipt(r)
   A'    = updateAccount(A, r)
   Ri_s' = saveReceipt(Ri_s, r)
   return r
@@ -478,10 +490,10 @@ if (result == true) {
 ```
 
 #### 中心化服務取得收據後向BOLT合約執行即時提幣並將收據送至客戶端 (10~13, 16~17)
-中心化服務取得 `receipt` 後即對其產生簽章：
+中心化服務取得 `receipt` 後即驗加速器對其之簽章：
 
 ```
-rs = signReceipt(r)
+result = verifyReceipt(rb)
 ```
 
 若提幣額度小於或等於 `v_i`，則中心化服務可以呼叫BOLT合約之 `*instantWithdraw` 方法以執行即時提幣：
@@ -493,7 +505,7 @@ Lw'  = *instantWithdraw(Lw)
 其中
 
 ```
-WSN  = sha3(rs_from, rs_nonce)
+WSN  = sha3(rb_from, rb_nonce)
 lw   = [WSN, sn_i, ai_a, v, timeout, fw]
 fw   = false
 Lw   = [lw1, lw2, ...]
@@ -503,16 +515,16 @@ Lw'  = push(Lw, lw)
 中心化服務待交易廣播至區塊鏈後(取得 `txHash`)即可將 `receipt` 回傳客戶端：
 
 ```
-return rs
+return rb
 ```
 
 申請提幣執行後，BOLT合約即廣播 `instantWithdrawal` 事件。
 
-#### 客戶端取得收據 (14~15)
+#### 客戶端取得收據 (16~18)
 最後，客戶端取得收據後即儲存：
 
 ```
-Ri_c' = saveReceipt(Ri_c, rs)
+Ri_c' = saveReceipt(Ri_c, rb)
 ```
 
 ### 轉帳 Remittance
@@ -549,6 +561,7 @@ result = verifyLightTx(ts)
 
 if (result == true) {
   r     = makeReceipt(ts)
+  rb    = signReceipt(r)
   B'    = updateBalance(B, r)
   Ri_s' = saveReceipt(Ri_s, r)
   return r
@@ -556,10 +569,10 @@ if (result == true) {
 ```
 
 #### 中心化服務取得收據並送至客戶端 (8~9)
-中心化服務取得 `receipt` 後即對其產生簽章並回傳客戶端：
+中心化服務取得 `receipt` 後即驗boosrer對其之簽章並回傳客戶端：
 
 ```
-rs = signReceipt(r)
+verifyReceipt(rb)
 return rs
 ```
 
@@ -567,7 +580,7 @@ return rs
 最後，客戶端取得收據後即儲存：
 
 ```
-Ri_c' = saveReceipt(Ri_c, rs)
+Ri_c' = saveReceipt(Ri_c, rb)
 ```
 
 ### 分散式稽核 Distributed Auditing
